@@ -1,0 +1,121 @@
+.App {
+    text-align: center;
+}
+
+.App-logo {
+    animation: App-logo-spin infinite 20s linear;
+    height: 80px;
+}
+
+.App-header {
+    background-color: #222;
+    height: 150px;
+    padding: 20px;
+    color: white;
+}
+
+.App-title {
+    font-size: 1.5em;
+}
+
+.App-intro {
+    font-size: large;
+}
+
+@keyframes App-logo-spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.menubar-button {
+    margin-left: -12px !important;
+    margin-right: 20px !important;
+}
+.menubar-title {
+    flex: 1;
+}
+.inline-icon {
+    vertical-align: middle;
+}
+
+.course-stats {
+    display: flex;
+    align-items: end;
+}
+
+.coursecode-main {
+    color: black;
+}
+.coursecode-secondary {
+    font-size: smaller;
+    color: gray;
+}
+
+.section {
+    padding: 10px;
+}
+.section-header {
+    font-weight: bold !important;
+}
+
+.course-desc {
+    color: blue;
+}
+
+.ta-list-container {
+    display: flex;
+}
+.ta-row-container {
+    display: flex;
+    flex-direction: row;
+}
+.ta-rows-container {
+    flex-grow: 1;
+}
+.ta-row-tas {
+    flex-grow: 1;
+    display: flex;
+}
+.course-name-container {
+    min-width: 12em;
+}
+.droppable-true {
+    background-color: #bfefff;
+    transition: all 0.4s;
+}
+.droppable-false {
+    background-color: rgba(1, 1, 1, 0);
+    transition: all 0.4s;
+}
+.sub {
+    text-transform: none;
+    padding-left: 1em;
+    padding-right: 0.5em;
+    font-size: smaller;
+}
+.sub:first-child {
+    padding-left: 0px;
+}
+.stats-container {
+    font-size: smaller;
+}
+
+.ta-chip.hours-over {
+    background-color: #ff9999;
+}
+.ta-chip.hours-under {
+    background-color: #fffd9b;
+}
+.ta-chip.hours-match {
+    background-color: #83fb55;
+}
+.ta-chip.highlight {
+    border: 2px solid #60d;
+}
+.ta-annotation {
+    background-color: #ddd !important;
+}
