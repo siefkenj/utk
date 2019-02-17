@@ -3,13 +3,7 @@ import React, { Component } from "react";
 //import SelectField from 'material-ui/SelectField';
 import {
     Paper,
-    List,
-    ListItem,
     Typography,
-    ListItemText,
-    LinearProgress,
-    Snackbar,
-    Button
 } from "@material-ui/core";
 
 import { ROOMS } from "./rooms.js";
@@ -18,13 +12,10 @@ import { TermItem, CourseItem, CourseSelect } from "./Components.js";
 import { Courses } from "./utils.js";
 
 import BigCalendar from "react-big-calendar";
-import localizer from "react-big-calendar/lib/localizer";
 import TimeGrid from "react-big-calendar/lib/TimeGrid";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import moment from "moment";
 
-window.Courses = Courses;
-window.moment = moment;
 // Setup the localizer by providing the moment (or globalize) Object
 // to the correct localizer.
 BigCalendar.momentLocalizer(moment); // or globalizeLocalizer

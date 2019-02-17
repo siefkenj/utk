@@ -103,9 +103,13 @@ class TermItem extends Component {
     };
 
     render() {
-        const { editable, onClick, ...other } = this.props;
+        const { editable, onClick, highlight, ...other } = this.props;
+        let classNames = "";
+        if (highlight) {
+            classNames += " highlight term-item-container"
+        }
         return (
-            <div>
+            <div className={classNames}>
                 <ListItem onClick={onClick} {...other}>
                     {editable && (
                         <Avatar>
@@ -145,7 +149,7 @@ class SessionSelectDialog extends Component {
     constructor(props) {
         super(props);
         this.state = {};
-        this.state.tabValue = 0;
+        this.state.tabValue = null;
     }
     handleTabChange = (event, tabValue) => {
         this.setState({ tabValue });
@@ -159,7 +163,7 @@ class SessionSelectDialog extends Component {
         this.props.onClose(value);
     };
 
-    _getSessions = session => {
+    _getSessions = (session, selectedValue={}) => {
         let len = 1;
         if (session === "summer") {
             len = 2;
@@ -174,12 +178,19 @@ class SessionSelectDialog extends Component {
                 year={year}
                 key={index}
                 onClick={() => this.handleListItemClick({ term, year })}
+                highlight={ (term === selectedValue.term && year === selectedValue.year) || undefined }
             />
         ));
     };
 
     render() {
         const { classes, onClose, selectedValue, ...other } = this.props;
+        let tabValue = this.state.tabValue;
+        if (tabValue === null) {
+            // term will be 2 chars long if it is a summer session otherwise
+            // one char long
+            tabValue = (selectedValue.term || "F").length === 1 ? 0 : 1;
+        }
 
         return (
             <Dialog
@@ -188,15 +199,15 @@ class SessionSelectDialog extends Component {
                 {...other}
             >
                 <Tabs
-                    value={this.state.tabValue}
+                    value={tabValue}
                     onChange={this.handleTabChange}
                 >
                     <Tab label="Standard" />
                     <Tab label="Summer" />
                 </Tabs>
                 <List>
-                    {this.state.tabValue === 0 && this._getSessions("fall")}
-                    {this.state.tabValue === 1 && this._getSessions("summer")}
+                    {tabValue === 0 && this._getSessions("fall", selectedValue)}
+                    {tabValue === 1 && this._getSessions("summer", selectedValue)}
                 </List>
             </Dialog>
         );
@@ -325,6 +336,7 @@ class CourseSelect extends Component {
 
     render() {
         const selectedCourse = this.state.selectedCourse;
+        // eslint-disable-next-line
         const { onChange, ...other } = this.props;
         return (
             <div>

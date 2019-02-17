@@ -74,16 +74,16 @@ class App extends Component {
             render() {
                 return (
                     <div>
-                        <Link to="/" onClick={closeDrawer}>
+                        <Link to="/" onClick={closeDrawer} className="menu-link">
                             <MenuItem>Home</MenuItem>
                         </Link>
-                        <Link to="/SplitRooms" onClick={closeDrawer}>
+                        <Link to="/SplitRooms" onClick={closeDrawer} className="menu-link">
                             <MenuItem>Split Midterm Rooms</MenuItem>
                         </Link>
-                        <Link to="/CourseStats" onClick={closeDrawer}>
+                        <Link to="/CourseStats" onClick={closeDrawer} className="menu-link">
                             <MenuItem>Course Stats</MenuItem>
                         </Link>
-                        <Link to="/AssignRoles" onClick={closeDrawer}>
+                        <Link to="/AssignRoles" onClick={closeDrawer} className="menu-link">
                             <MenuItem>Assign Roles</MenuItem>
                         </Link>
                     </div>
@@ -93,7 +93,7 @@ class App extends Component {
 
         return (
             <HashRouter>
-                <div>
+                <div style={{display: 'flex', flexDirection: 'column', height: '100%'}}>
                     <CssBaseline />
                     <ButtonAppBar
                         onTitleClick={() => this.setState({ drawerOpen: true })}
@@ -106,7 +106,6 @@ class App extends Component {
                     <Route path="/CourseStats" component={CourseStats} />
                     <Route path="/AssignRoles" component={AssignRoles} />
                     <Route exact path="/" component={Home} />
-                    <Link to="/">Back</Link>
                 </div>
             </HashRouter>
         );

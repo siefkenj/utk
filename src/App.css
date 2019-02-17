@@ -1,3 +1,8 @@
+html, body, #root {
+    height: 100%;
+    width: 100%;
+}
+
 .App {
     text-align: center;
 }
@@ -31,6 +36,13 @@
     }
 }
 
+
+.term-item-container.highlight {
+    background-color: #fde;
+}
+
+
+
 .menubar-button {
     margin-left: -12px !important;
     margin-right: 20px !important;
@@ -55,6 +67,11 @@
     color: gray;
 }
 
+
+.menu-link {
+    text-decoration: none;
+}
+
 .section {
     padding: 10px;
 }
@@ -68,6 +85,17 @@
 
 .ta-list-container {
     display: flex;
+    flex-grow: 1;
+    position: relative;
+}
+.ta-list {
+    /* width: 750px;*/
+    /* width: 400px;*/
+    position: relative;
+    flex-grow: 1;
+}
+.ta-draggable {
+    display: inline-block;
 }
 .ta-row-container {
     display: flex;
@@ -75,22 +103,40 @@
 }
 .ta-rows-container {
     flex-grow: 1;
+    flex: 1;
+    position: relative;
+}
+.scroll-hack {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
 }
 .ta-row-tas {
     flex-grow: 1;
     display: flex;
+    flex-wrap: wrap;
+    border-left: 2px solid rgba(1,1,1,0);
+    transition: all 0.4s;
 }
 .course-name-container {
     min-width: 12em;
 }
-.droppable-true {
-    background-color: #bfefff;
-    transition: all 0.4s;
+.droppable-3 {
+    background-color: #de33bc;
 }
-.droppable-false {
-    background-color: rgba(1, 1, 1, 0);
-    transition: all 0.4s;
+.droppable-2 {
+    background-color: #ffbce6;
 }
+.droppable-1, .droppable-2, .droppable-3 {
+    /* background-color: #bfefff; */
+    border-left: 2px solid #504fff;
+}
+.droppable-0 {
+   /* background-color: rgba(1, 1, 1, 0); */
+}
+
+
 .sub {
     text-transform: none;
     padding-left: 1em;
@@ -104,18 +150,123 @@
     font-size: smaller;
 }
 
-.ta-chip.hours-over {
+.ta-chip-inner > * {
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+.ta-chip-inner {
+    width: 120px;
+}
+
+.ta-chip.hours-over, .hours-over {
     background-color: #ff9999;
 }
-.ta-chip.hours-under {
+.ta-chip.hours-under, .hours-under {
     background-color: #fffd9b;
 }
-.ta-chip.hours-match {
+.ta-chip.hours-match, .hours-match {
     background-color: #83fb55;
 }
+
+/* we need to be specific to override MuiChip */
+.ta-chip.ta-chip-2 {
+    border: 2px solid rgba(1,1,1,0);
+    border-left: none;
+}
 .ta-chip.highlight {
-    border: 2px solid #60d;
+    border: 2px solid black;
+    border-left: none;
+}
+.ta-chip.highlight-1 {
+    border: 2px solid #ffbce6;
+    border-left: none;
+}
+.ta-chip.highlight-2 {
+    border: 2px solid #de33bc;
+    border-left: none;
 }
 .ta-annotation {
     background-color: #ddd !important;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    .Resizer {
+        background: #000;
+        opacity: .2;
+        z-index: 1;
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        -moz-background-clip: padding;
+        -webkit-background-clip: padding;
+        background-clip: padding-box;
+    }
+
+     .Resizer:hover {
+        -webkit-transition: all 2s ease;
+        transition: all 2s ease;
+    }
+
+     .Resizer.horizontal {
+        height: 11px;
+        margin: -5px 0;
+        border-top: 5px solid rgba(255, 255, 255, 0);
+        border-bottom: 5px solid rgba(255, 255, 255, 0);
+        cursor: row-resize;
+        width: 100%;
+    }
+
+    .Resizer.horizontal:hover {
+        border-top: 5px solid rgba(0, 0, 0, 0.5);
+        border-bottom: 5px solid rgba(0, 0, 0, 0.5);
+    }
+
+    .Resizer.vertical {
+        width: 11px;
+        margin: 0 -5px;
+        border-left: 5px solid rgba(255, 255, 255, 0);
+        border-right: 5px solid rgba(255, 255, 255, 0);
+        cursor: col-resize;
+    }
+
+    .Resizer.vertical:hover {
+        border-left: 5px solid rgba(0, 0, 0, 0.5);
+        border-right: 5px solid rgba(0, 0, 0, 0.5);
+    }
+    .Resizer.disabled {
+      cursor: not-allowed;
+    }
+    .Resizer.disabled:hover {
+      border-color: transparent;
+    }
+    .Pane.vertical {
+        display: flex;
+    }
+
+
+.imbalanced-assignment {
+    background-color: #ffe800 !important;
 }
