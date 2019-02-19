@@ -457,7 +457,7 @@ class SplitRooms extends Component {
                         </div>
                         <div style={{ paddingLeft: 5 }}>
                             <Button
-                                variant="raised"
+                                variant="contained"
                                 color="primary"
                                 onClick={this.splitRooms}
                             >

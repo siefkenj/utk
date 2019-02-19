@@ -11,18 +11,37 @@ import {
     Toolbar,
     Typography
 } from "@material-ui/core";
-import PropTypes from "prop-types";
+//import PropTypes from "prop-types";
 import CssBaseline from "@material-ui/core/CssBaseline";
 
 import { Route, Link, HashRouter } from "react-router-dom";
 
-import { TermItem, CourseItem, CourseSelect } from "./Components.js";
+import { Session } from "./libs/session-date.js";
 import { SplitRooms } from "./SplitRooms.js";
 import { AssignRoles } from "./AssignRoles.js";
 import { CourseStats } from "./CourseStats.js";
 //import moment from 'moment';
-import "./App.css";
+import "./css/App.css";
 import "react-selectize/themes/index.css";
+
+import { useStore, useActions } from "easy-peasy";
+
+// import { SessionDisplay } from "./components/term-select.js";
+
+//function TestWithStore() {
+//    const mynum = useStore(state => state);
+//    const update = useActions(actions => actions.setCurrentTerm);
+//    function increment() {
+//        update(mynum.currentTerm + 1);
+//    }
+//
+//    return (
+//        <div>
+//            It is '{mynum.currentTerm}'
+//            <button onClick={increment}>Increment</button>
+//        </div>
+//    );
+//}
 
 const ident = function(x) {
     return x;
@@ -63,7 +82,7 @@ class App extends Component {
         this.state = {};
         this.state.rooms = [];
         this.state.drawerOpen = false;
-        this.state.session = TermItem.dateToSession(new Date());
+        this.state.session = Session.fromDate(new Date());
     }
 
     render() {
@@ -74,16 +93,32 @@ class App extends Component {
             render() {
                 return (
                     <div>
-                        <Link to="/" onClick={closeDrawer} className="menu-link">
+                        <Link
+                            to="/"
+                            onClick={closeDrawer}
+                            className="menu-link"
+                        >
                             <MenuItem>Home</MenuItem>
                         </Link>
-                        <Link to="/SplitRooms" onClick={closeDrawer} className="menu-link">
+                        <Link
+                            to="/SplitRooms"
+                            onClick={closeDrawer}
+                            className="menu-link"
+                        >
                             <MenuItem>Split Midterm Rooms</MenuItem>
                         </Link>
-                        <Link to="/CourseStats" onClick={closeDrawer} className="menu-link">
+                        <Link
+                            to="/CourseStats"
+                            onClick={closeDrawer}
+                            className="menu-link"
+                        >
                             <MenuItem>Course Stats</MenuItem>
                         </Link>
-                        <Link to="/AssignRoles" onClick={closeDrawer} className="menu-link">
+                        <Link
+                            to="/AssignRoles"
+                            onClick={closeDrawer}
+                            className="menu-link"
+                        >
                             <MenuItem>Assign Roles</MenuItem>
                         </Link>
                     </div>
@@ -93,7 +128,13 @@ class App extends Component {
 
         return (
             <HashRouter>
-                <div style={{display: 'flex', flexDirection: 'column', height: '100%'}}>
+                <div
+                    style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        height: "100%"
+                    }}
+                >
                     <CssBaseline />
                     <ButtonAppBar
                         onTitleClick={() => this.setState({ drawerOpen: true })}

@@ -68,7 +68,7 @@ const splitFSHours = (course, coursesInfo, ta, tasInfo, needsTraining=false) => 
         // create a canonicalized list of fall courses the TA is in.
         let currCourses = tasInfo[ta].assigned;
         currCourses = currCourses.filter( c => c.endsWith("F") || c.endsWith("Y") );
-        if (currCourses.length == 0 && tasInfo[ta].assigned.length > 0) {
+        if (currCourses.length === 0 && tasInfo[ta].assigned.length > 0) {
             // if there are no F or Y courses, we have to use S courses
             currCourses = tasInfo[ta].assigned
         }
@@ -283,7 +283,7 @@ class TAAssignmentList extends Component {
         courseInfo = courseInfo || { openings: "?", hoursPerAssignment: "?" };
 
         let highlighClass = "";
-        if (tas.length == courseInfo.openings) {
+        if (tas.length === courseInfo.openings) {
             highlighClass += " hours-match";
         } else if (tas.length > courseInfo.openings) {
             highlighClass += " hours-over";
@@ -816,9 +816,9 @@ class AssignRoles extends Component {
     };
 
     createFormattedAssignmentsTable = tasInfo => {
-        const tas = this.state.tas;
+//        const tas = this.state.tas;
         const coursesInfo = this.state.coursesInfo;
-        const courses = this.state.courses;
+//        const courses = this.state.courses;
         const assignments = this.state.assignments;
 
         let firstTimeTas = {};
@@ -837,7 +837,7 @@ class AssignRoles extends Component {
         }
         let courseList = Object.keys(hash);
         for (let [course, assignedTas] of Object.entries(assignments)) {
-            if ((assignedTas || []).length == 0) {
+            if ((assignedTas || []).length === 0) {
                 continue;
             }
             let [formattedCourse, index] = fuzzyCourseFind(course, courseList);
@@ -1245,7 +1245,7 @@ class AssignRoles extends Component {
                                     ]}
                                     columns={[...Array(17).keys()].map(k => {
                                         // The "EmployeeID" column is dynamically computed
-                                        if (k==1) {return { readOnly: true }};
+                                        if (k===1) {return { readOnly: true }};
                                         return {readOnly: false};
                                     })}
                                     onAfterChange={this.formattedAssignmentTableChanged}

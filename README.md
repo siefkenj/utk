@@ -1,2 +1,2 @@
-# utk
-Utoronto Tool Kit
+# UTK
+uToronto Tool Kit

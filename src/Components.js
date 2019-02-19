@@ -350,7 +350,7 @@ class CourseSelect extends Component {
                     }
                     onKeyPress={this._onKeyPress}
                 />
-                <Button variant="raised" onClick={this._getCourseInfo}>
+                <Button variant="contained" onClick={this._getCourseInfo}>
                     Search
                 </Button>
                 <CourseSelectDialog

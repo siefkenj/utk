@@ -8,7 +8,9 @@ import {
 
 import { ROOMS } from "./rooms.js";
 
-import { TermItem, CourseItem, CourseSelect } from "./Components.js";
+import { CourseSelect } from "./Components.js";
+import { SessionDisplay } from "./components/term-select.js"
+import { Session } from "./libs/session-date.js"
 import { Courses } from "./utils.js";
 
 import BigCalendar from "react-big-calendar";
@@ -51,7 +53,7 @@ class CourseStats extends Component {
     constructor(props) {
         super(props);
         this.state = {};
-        this.state.session = TermItem.dateToSession(new Date());
+        this.state.session = Session.fromDate(new Date());
         this.state.course = {};
     }
     _getTimes(arr, startDate = new Date()) {
@@ -145,10 +147,9 @@ class CourseStats extends Component {
                     <Typography component="div">
                         Select the term for the course.
                     </Typography>
-                    <TermItem
-                        term={this.state.session.term}
-                        year={this.state.session.year}
-                        editable={true}
+                    <SessionDisplay
+                        session={this.state.session}
+                        editable
                         onChange={x => {
                             this.setState({ session: x });
                         }}
