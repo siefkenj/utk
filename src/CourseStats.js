@@ -170,7 +170,7 @@ class CourseStats extends Component {
 
                     <CourseSelect
                         term={this.state.session.term}
-                        year={this.state.session.year}
+                        year={this.state.session.prettyYear}
                         onChange={this.onCourseChange}
                     />
                 </Paper>
