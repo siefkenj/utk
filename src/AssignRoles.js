@@ -16,26 +16,34 @@ import SplitPane from "react-split-pane";
 import HotTable from "react-handsontable";
 import Handsontable from "handsontable";
 
-
 // some tools for fuzzy matching
 
 // Find `course` in `list` doing a fuzzy search
 const fuzzyCourseFind = (course, list) => {
-    let hash = {}, initHash = {};
+    let hash = {},
+        initHash = {};
     let shortCourse = course.replace(/\s+/g, "");
-    for (let i=0; i < list.length; i++) {
+    for (let i = 0; i < list.length; i++) {
         let name = list[i];
         hash[name] = i;
         name = name.replace(/\s+/g, "");
-        hash[name] = i
-        initHash[name.slice(0,6)] = i
+        hash[name] = i;
+        initHash[name.slice(0, 6)] = i;
     }
     if (hash[shortCourse] != null) {
         return [list[hash[shortCourse]], hash[shortCourse]];
     }
-    if (initHash[shortCourse.slice(0,6)] != null) {
-        console.warn("Matching", course, "and", list[initHash[shortCourse.slice(0,6)]]);
-        return [list[initHash[shortCourse.slice(0,6)]], initHash[shortCourse.slice(0,6)]]
+    if (initHash[shortCourse.slice(0, 6)] != null) {
+        console.warn(
+            "Matching",
+            course,
+            "and",
+            list[initHash[shortCourse.slice(0, 6)]]
+        );
+        return [
+            list[initHash[shortCourse.slice(0, 6)]],
+            initHash[shortCourse.slice(0, 6)]
+        ];
     }
     const rep_table = {
         "VIC MAC F": "VIC F",
@@ -45,8 +53,8 @@ const fuzzyCourseFind = (course, list) => {
         "PG MAC F": "PG F",
         "PG MAC S": "PG S",
         "NC MAC F": "NC F",
-        "NC MAC S": "NC S",
-    }
+        "NC MAC S": "NC S"
+    };
 
     if (list.indexOf(rep_table[course]) >= 0) {
         let i = list.indexOf(rep_table[course]);
@@ -54,44 +62,55 @@ const fuzzyCourseFind = (course, list) => {
     }
 
     return [null, null];
-}
+};
 
 // return the fall and spring hours breakdown for a particular
 // course. If needsTraining==true, a total of 4 hours is subtracted
 // from the F offerings, if possible.
-const splitFSHours = (course, coursesInfo, ta, tasInfo, needsTraining=false) => {
+const splitFSHours = (
+    course,
+    coursesInfo,
+    ta,
+    tasInfo,
+    needsTraining = false
+) => {
     let deduction = 0;
     if (needsTraining) {
         const deductions = {
-            1: [-4], 2: [-2, -2], 3: [-2, -1, -1], 4: [-1, -1, -1, -1], 5: [-1, -1, -1, -1, 0], 6: [-1, -1, -1, -1, 0, 0]
-        }
+            1: [-4],
+            2: [-2, -2],
+            3: [-2, -1, -1],
+            4: [-1, -1, -1, -1],
+            5: [-1, -1, -1, -1, 0],
+            6: [-1, -1, -1, -1, 0, 0]
+        };
         // create a canonicalized list of fall courses the TA is in.
         let currCourses = tasInfo[ta].assigned;
-        currCourses = currCourses.filter( c => c.endsWith("F") || c.endsWith("Y") );
+        currCourses = currCourses.filter(
+            c => c.endsWith("F") || c.endsWith("Y")
+        );
         if (currCourses.length === 0 && tasInfo[ta].assigned.length > 0) {
             // if there are no F or Y courses, we have to use S courses
-            currCourses = tasInfo[ta].assigned
+            currCourses = tasInfo[ta].assigned;
         }
         if (currCourses.indexOf(course) > -1) {
-            deduction = deductions[currCourses.length][currCourses.indexOf(course)];
+            deduction =
+                deductions[currCourses.length][currCourses.indexOf(course)];
         }
         //console.log(course, ta, tasInfo[ta], currCourses)
     }
 
-    let ret = {fhours: 0, shours: 0, deduction};
+    let ret = { fhours: 0, shours: 0, deduction };
     if (course.endsWith("F")) {
-        ret.fhours = (+coursesInfo[course].hoursPerAssignment) + deduction;
+        ret.fhours = +coursesInfo[course].hoursPerAssignment + deduction;
     } else if (course.endsWith("S")) {
-        ret.shours = (+coursesInfo[course].hoursPerAssignment) + deduction;
+        ret.shours = +coursesInfo[course].hoursPerAssignment + deduction;
     } else if (course.endsWith("Y")) {
-        ret.shours = (+coursesInfo[course].hoursPerAssignment)/2;
-        ret.fhours = (+coursesInfo[course].hoursPerAssignment)/2 + deduction;
+        ret.shours = +coursesInfo[course].hoursPerAssignment / 2;
+        ret.fhours = +coursesInfo[course].hoursPerAssignment / 2 + deduction;
     }
-    return ret
-}
-
-
-
+    return ret;
+};
 
 const grid = 2;
 
@@ -731,7 +750,7 @@ class AssignRoles extends Component {
             this.setState(this.coursesTableToState(this.tables.courses));
         }
     };
-    
+
     formattedAssignmentTableChanged = (changes, action) => {
         if (
             !this.refs.hot5 ||
@@ -816,9 +835,9 @@ class AssignRoles extends Component {
     };
 
     createFormattedAssignmentsTable = tasInfo => {
-//        const tas = this.state.tas;
+        //        const tas = this.state.tas;
         const coursesInfo = this.state.coursesInfo;
-//        const courses = this.state.courses;
+        //        const courses = this.state.courses;
         const assignments = this.state.assignments;
 
         let firstTimeTas = {};
@@ -831,7 +850,8 @@ class AssignRoles extends Component {
         let formattedAssignmentHash = {};
         // make a hash of all the available assignments
         let hash = {};
-        for (let [assNum, emp, course, ...rest] of this.tables.formattedAssignment) {
+        for (let [assNum, emp, course, ...rest] of this.tables
+            .formattedAssignment) {
             hash[course] = hash[course] || [];
             hash[course].push(assNum);
         }
@@ -845,33 +865,61 @@ class AssignRoles extends Component {
                 console.error("Could not find table entry for", course);
                 continue;
             }
-            for (let i=0; i < assignedTas.length; i++) {
+            for (let i = 0; i < assignedTas.length; i++) {
                 let ta = assignedTas[i];
                 let number = hash[formattedCourse][i];
                 if (number == null) {
-                    console.error("No posting available for", course, "ta #", i+1);
+                    console.error(
+                        "No posting available for",
+                        course,
+                        "ta #",
+                        i + 1
+                    );
                 }
                 formattedAssignmentHash[number] = {
                     id: ta,
                     name: tasInfo[ta].name,
-                    ...splitFSHours(course, coursesInfo, ta, tasInfo, firstTimeTas[ta])
+                    ...splitFSHours(
+                        course,
+                        coursesInfo,
+                        ta,
+                        tasInfo,
+                        firstTimeTas[ta]
+                    )
                 };
             }
         }
 
-        console.log(formattedAssignmentHash)
+        console.log(formattedAssignmentHash);
 
         let ret = [];
         for (let row of this.tables.formattedAssignment) {
-            let [number, employee, courseID, session, fhours, shours, ...rest] = row;
+            let [
+                number,
+                employee,
+                courseID,
+                session,
+                fhours,
+                shours,
+                ...rest
+            ] = row;
             if (!formattedAssignmentHash[number]) {
                 // there is no TA assigned to this position, so leave the row as is
                 ret.push(row);
                 continue;
             }
 
-            let rowInfo = formattedAssignmentHash[number]
-            ret.push([number, rowInfo.name, courseID, session, rowInfo.fhours, rowInfo.shours, ...rest, rowInfo.deduction])
+            let rowInfo = formattedAssignmentHash[number];
+            ret.push([
+                number,
+                rowInfo.name,
+                courseID,
+                session,
+                rowInfo.fhours,
+                rowInfo.shours,
+                ...rest,
+                rowInfo.deduction
+            ]);
         }
         this.tables.formattedAssignment = ret;
 
@@ -988,34 +1036,36 @@ class AssignRoles extends Component {
                     flexDirection: "column"
                 }}
             >
-                <BottomNavigation
-                    value={currTab}
-                    onChange={this.changeTab}
-                    showLabels
-                >
-                    <BottomNavigationAction
-                        value="table"
-                        label="Graphical"
-                        icon={<TouchApp />}
-                    />
-                    <BottomNavigationAction
-                        value="spreadsheet"
-                        label="Spreadsheet"
-                        icon={<ViewList />}
-                    />
-                    <BottomNavigationAction
-                        value="details"
-                        label="Assignment Breakdown"
-                        icon={<ViewList />}
-                    />
-                    <BottomNavigationAction
-                        value="formatted"
-                        label="Formatted Breakdown"
-                        icon={<ViewList />}
-                    />
-                </BottomNavigation>
+                <div>
+                    <BottomNavigation
+                        value={currTab}
+                        onChange={this.changeTab}
+                        showLabels
+                    >
+                        <BottomNavigationAction
+                            value="table"
+                            label="Graphical"
+                            icon={<TouchApp />}
+                        />
+                        <BottomNavigationAction
+                            value="spreadsheet"
+                            label="Spreadsheet"
+                            icon={<ViewList />}
+                        />
+                        <BottomNavigationAction
+                            value="details"
+                            label="Assignment Breakdown"
+                            icon={<ViewList />}
+                        />
+                        <BottomNavigationAction
+                            value="formatted"
+                            label="Formatted Breakdown"
+                            icon={<ViewList />}
+                        />
+                    </BottomNavigation>
+                </div>
                 {currTab === "table" && (
-                    <div className={"ta-list-container"}>
+                    <div className="ta-list-container">
                         <DragDropContext
                             onDragEnd={this.onDragEnd}
                             onDragStart={this.onDragStart}
@@ -1118,91 +1168,88 @@ class AssignRoles extends Component {
                         </div>
                     </div>
                 )}
-                {currTab === "details" &&
-                    this.createAssignmentsTable(tasInfo) && (
+                {currTab === "details" && this.createAssignmentsTable(tasInfo) && (
+                    <div>
                         <div>
-                            <div>
-                                <HotTable
-                                    root="hot3"
-                                    ref="hot3"
-                                    data={this.tables.assignment}
-                                    colHeaders={[
-                                        "UTORid",
-                                        "Name",
-                                        "Request Min",
-                                        "Request Max",
-                                        "Annotation",
-                                        "Given",
-                                        "Given F",
-                                        "Given S"
-                                    ].concat(
-                                        [...Array(7).keys()].map(
-                                            k => "Assignment " + (k + 1)
-                                        )
-                                    )}
-                                    columns={[...Array(15).keys()].map(k => {
-                                        return { readOnly: true };
-                                    })}
-                                    rowHeaders={true}
-                                    height={600}
-                                    minSpareRows={1}
-                                    minCols={15}
-                                    cells={function(row, col) {
-                                        let cellProperties = {};
-                                        if (col === 6 || col === 7) {
-                                            let data = this.instance.getDataAtRow(
-                                                row
-                                            );
-                                            // determine if there is a big imbalance between fall and spring
-                                            if (
-                                                Math.abs(data[6] - data[7]) > 30
+                            <HotTable
+                                root="hot3"
+                                ref="hot3"
+                                data={this.tables.assignment}
+                                colHeaders={[
+                                    "UTORid",
+                                    "Name",
+                                    "Request Min",
+                                    "Request Max",
+                                    "Annotation",
+                                    "Given",
+                                    "Given F",
+                                    "Given S"
+                                ].concat(
+                                    [...Array(7).keys()].map(
+                                        k => "Assignment " + (k + 1)
+                                    )
+                                )}
+                                columns={[...Array(15).keys()].map(k => {
+                                    return { readOnly: true };
+                                })}
+                                rowHeaders={true}
+                                height={600}
+                                minSpareRows={1}
+                                minCols={15}
+                                cells={function(row, col) {
+                                    let cellProperties = {};
+                                    if (col === 6 || col === 7) {
+                                        let data = this.instance.getDataAtRow(
+                                            row
+                                        );
+                                        // determine if there is a big imbalance between fall and spring
+                                        if (Math.abs(data[6] - data[7]) > 30) {
+                                            cellProperties.renderer = function(
+                                                instance,
+                                                td,
+                                                row,
+                                                col,
+                                                prop,
+                                                value,
+                                                cellProperties
                                             ) {
-                                                cellProperties.renderer = function(
-                                                    instance,
-                                                    td,
-                                                    row,
-                                                    col,
-                                                    prop,
-                                                    value,
-                                                    cellProperties
-                                                ) {
-                                                    Handsontable.renderers.TextRenderer.apply(
-                                                        this,
-                                                        arguments
-                                                    );
-                                                    td.className +=
-                                                        " imbalanced-assignment";
-                                                };
-                                            }
+                                                Handsontable.renderers.TextRenderer.apply(
+                                                    this,
+                                                    arguments
+                                                );
+                                                td.className +=
+                                                    " imbalanced-assignment";
+                                            };
                                         }
-                                        return cellProperties;
-                                    }}
-                                />
-                            </div>
-                            <div>
-                                <HotTable
-                                    root="hot4"
-                                    ref="hot4"
-                                    data={this.tables.assignmentByCourse}
-                                    colHeaders={[
-                                        "Course",
-                                        "UTORid",
-                                        "Name",
-                                        "Hours",
-                                        "All Assignments",
-                                        "All Hours"
-                                    ]}
-                                    columns={[...Array(15).keys()].map(k => {
-                                        return { readOnly: true };
-                                    })}
-                                    rowHeaders={true}
-                                    height={600}
-                                    minSpareRows={1}
-                                    minCols={6}
-                                />
-                            </div>
+                                    }
+                                    return cellProperties;
+                                }}
+                            />
                         </div>
-                    )}
+                        <div>
+                            <HotTable
+                                root="hot4"
+                                ref="hot4"
+                                data={this.tables.assignmentByCourse}
+                                colHeaders={[
+                                    "Course",
+                                    "UTORid",
+                                    "Name",
+                                    "Hours",
+                                    "All Assignments",
+                                    "All Hours"
+                                ]}
+                                columns={[...Array(15).keys()].map(k => {
+                                    return { readOnly: true };
+                                })}
+                                rowHeaders={true}
+                                height={600}
+                                minSpareRows={1}
+                                minCols={6}
+                            />
+                        </div>
+                    </div>
+                )}
                 {currTab === "formatted" &&
                     this.createFormattedAssignmentsTable(tasInfo) && (
                         <div>
@@ -1211,7 +1258,9 @@ class AssignRoles extends Component {
                                     root="hot6"
                                     ref="hot6"
                                     data={this.tables.firstTimeTas}
-                                    onAfterChange={this.firstTimeTasTableChanged}
+                                    onAfterChange={
+                                        this.firstTimeTasTableChanged
+                                    }
                                     colHeaders={["First Time TAs"]}
                                     rowHeaders={true}
                                     height={600}
@@ -1245,10 +1294,14 @@ class AssignRoles extends Component {
                                     ]}
                                     columns={[...Array(17).keys()].map(k => {
                                         // The "EmployeeID" column is dynamically computed
-                                        if (k===1) {return { readOnly: true }};
-                                        return {readOnly: false};
+                                        if (k === 1) {
+                                            return { readOnly: true };
+                                        }
+                                        return { readOnly: false };
                                     })}
-                                    onAfterChange={this.formattedAssignmentTableChanged}
+                                    onAfterChange={
+                                        this.formattedAssignmentTableChanged
+                                    }
                                     rowHeaders={true}
                                     height={600}
                                     minSpareRows={1}
