@@ -14,7 +14,7 @@
     "js-combinatorics": "^0.5.4",
     "localforage": "^1.7.3",
     "react": "^16.8.2",
-    "react-beautiful-dnd": "^8.0.7",
+    "react-beautiful-dnd": "^10.0.4",
     "react-big-calendar": "^0.19.2",
     "react-dom": "^16.8.2",
     "react-dom-factories": "^1.0.0",

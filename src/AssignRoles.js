@@ -16,6 +16,11 @@ import SplitPane from "react-split-pane";
 import HotTable from "react-handsontable";
 import Handsontable from "handsontable";
 
+// from https://stackoverflow.com/questions/3446170/escape-string-for-use-in-javascript-regex
+function escapeRegExp(string) {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
+}
+
 // some tools for fuzzy matching
 
 // Find `course` in `list` doing a fuzzy search
@@ -556,12 +561,12 @@ class AssignRoles extends Component {
             let matchLevel = 1;
             // match high preferences
             for (let pref of prefs.preferenceM) {
-                if (course.match(pref)) {
+                if (course.match(escapeRegExp(pref))) {
                     matchLevel = 2;
                 }
             }
             for (let pref of prefs.preferenceH) {
-                if (course.match(pref)) {
+                if (course.match(escapeRegExp(pref))) {
                     matchLevel = 3;
                 }
             }
@@ -706,13 +711,14 @@ class AssignRoles extends Component {
             let inPrefs = selectedCoursesList.map((course, index) => {
                 let matchLevel = 0;
                 for (let pref of prefs.preferenceM) {
-                    if (course.match(pref)) {
+                    // escapeRegExp needs to be escaped because .match calls `new RegExp(...)` on the string
+                    if (course.match(escapeRegExp(pref))) {
                         matchLevel = 1;
                     }
                 }
                 // match high preferences
                 for (let pref of prefs.preferenceH) {
-                    if (course.match(pref)) {
+                    if (course.match(escapeRegExp(pref))) {
                         matchLevel = 2;
                     }
                 }
