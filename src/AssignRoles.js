@@ -307,7 +307,7 @@ class TAAssignmentList extends Component {
         courseInfo = courseInfo || { openings: "?", hoursPerAssignment: "?" };
 
         let highlighClass = "";
-        if (tas.length === courseInfo.openings) {
+        if (tas.length === +courseInfo.openings) {
             highlighClass += " hours-match";
         } else if (tas.length > courseInfo.openings) {
             highlighClass += " hours-over";
