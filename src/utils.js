@@ -8,32 +8,48 @@ class Courses {
 
         let { term, year } = session;
         let { lastName } = instructor || { lastName: "" };
-        this.fetchPromise = fetch(
+        const parseJSON = response => response.json();
+        const parseResponse = response => {
+            this.data = response;
+            this.courses = [];
+
+            if (response.status === "error") {
+                return [];
+            }
+
+            for (let [code, course] of Object.entries(this.data)) {
+                this.courses.push(
+                    new Course({
+                        course: code,
+                        session: session,
+                        data: course
+                    })
+                );
+            }
+
+            return this.courses;
+        };
+        // We fetch once with the given session and onces with the equivalent "Y" session
+        // because "Y" overlaps all other sessions
+        const fetch1 = fetch(
             `//www.math.toronto.edu/siefkenj/get_course_info.php?year=${year}&session=${term}&course=${
                 this.course
             }&instructor=${lastName}`
         )
-            .then(response => response.json())
-            .then(response => {
-                this.data = response;
-                this.courses = [];
+            .then(parseJSON)
+            .then(parseResponse);
+        const ySession = term.length <= 1 ? "Y" : term.charAt(0) + "Y"
+        const fetch2 = fetch(
+            `//www.math.toronto.edu/siefkenj/get_course_info.php?year=${year}&session=${ySession}&course=${
+                this.course
+            }&instructor=${lastName}`
+        )
+            .then(parseJSON)
+            .then(parseResponse);
 
-                if (response.status === "error") {
-                    return [];
-                }
-
-                for (let [code, course] of Object.entries(this.data)) {
-                    this.courses.push(
-                        new Course({
-                            course: code,
-                            session: session,
-                            data: course
-                        })
-                    );
-                }
-
-                return this.courses;
-            });
+        this.fetchPromise = Promise.all([fetch1, fetch2]).then(values => {
+            return values[0].concat(values[1])
+        });
         return this.fetchPromise;
     }
 }

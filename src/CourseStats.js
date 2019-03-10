@@ -133,6 +133,7 @@ class CourseStats extends Component {
         const lecTimes = this._getTimes(this.state.course.lectures || []);
         const tutTimes = this._getTimes(this.state.course.tutorials || []);
         const instTimes = this._getTimes(this.state.instructorCourses || []);
+        const session = Session.ensure(this.state.session);
 
         return (
             <span>
@@ -148,7 +149,7 @@ class CourseStats extends Component {
                         Select the term for the course.
                     </Typography>
                     <SessionDisplay
-                        session={this.state.session}
+                        session={session}
                         editable
                         onChange={x => {
                             this.setState({ session: x });
@@ -169,8 +170,8 @@ class CourseStats extends Component {
                     </Typography>
 
                     <CourseSelect
-                        term={this.state.session.term}
-                        year={this.state.session.prettyYear}
+                        term={session.term}
+                        year={session.prettyYear}
                         onChange={this.onCourseChange}
                     />
                 </Paper>
