@@ -217,12 +217,13 @@ class TA extends Component {
         let hoursFilled = "hours-under";
         if (taInfo.assignedHours > taInfo.maxHours) {
             hoursFilled = "hours-over";
-        }
-        if (
+        } else if (
             taInfo.assignedHours <= taInfo.maxHours &&
             taInfo.assignedHours >= taInfo.minHours
         ) {
             hoursFilled = "hours-match";
+        } else if (taInfo.unknownTA) {
+            hoursFilled = "hours-unknown";
         }
 
         let highlightClass = "";
@@ -306,10 +307,14 @@ class TAAssignmentList extends Component {
         } = this.props;
         courseInfo = courseInfo || { openings: "?", hoursPerAssignment: "?" };
 
+        // We might have a TA whos ID is not recognized. In this
+        // case, they don't contribute to the "assigned" count.
+        const numValidTAs = tas.filter(x => !!tasInfo[x]).length
+
         let highlighClass = "";
-        if (tas.length === +courseInfo.openings) {
+        if (numValidTAs === +courseInfo.openings) {
             highlighClass += " hours-match";
-        } else if (tas.length > courseInfo.openings) {
+        } else if (numValidTAs > courseInfo.openings) {
             highlighClass += " hours-over";
         }
 
@@ -325,7 +330,7 @@ class TAAssignmentList extends Component {
                             <span className="sub">Hours:</span>
                             {courseInfo.hoursPerAssignment}
                             <span className="sub">Filled:</span>
-                            {tas.length}/{courseInfo.openings}
+                            {numValidTAs}/{courseInfo.openings}
                         </div>
                     </div>
                 </Button>
@@ -333,7 +338,7 @@ class TAAssignmentList extends Component {
         );
 
         const taList = tas.map((ta, index) => {
-            const taInfo = tasInfo[ta] || { id: ta };
+            const taInfo = tasInfo[ta] || { id: ta, unknownTA: true };
             return (
                 <Draggable
                     key={course + taInfo.id}
@@ -452,6 +457,7 @@ class AssignRoles extends Component {
             }
         }
         console.warn("Could not find TA with id", taId);
+        return taId;
     };
 
     getAssignments(ta) {
@@ -590,7 +596,7 @@ class AssignRoles extends Component {
         let ta = this.lookupTa(taId);
         let sourcePos = courses.indexOf(result.source.droppableId);
 
-        let taInfo = tasInfo[ta];
+        let taInfo = tasInfo[ta] || {unknownTA: true};
         console.log(ta, taInfo, taId);
         let prefs = {
             preferenceH: (taInfo.preferenceH || "")
