@@ -209,9 +209,10 @@ function SessionSelectWide(props) {
     );
 }
 SessionSelectWide.propTypes = {
-    currentSession: PropTypes.object,
+    selectedSession: PropTypes.object,
     today: PropTypes.instanceOf(Date),
-    startYear: PropTypes.object
+    startYear: PropTypes.object,
+    onClick: PropTypes.func
 };
 
 // Display the current session with an optional edit button

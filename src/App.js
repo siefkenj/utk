@@ -26,22 +26,8 @@ import "react-selectize/themes/index.css";
 
 import { useStore, useActions } from "easy-peasy";
 
-// import { SessionDisplay } from "./components/term-select.js";
-
-//function TestWithStore() {
-//    const mynum = useStore(state => state);
-//    const update = useActions(actions => actions.setCurrentTerm);
-//    function increment() {
-//        update(mynum.currentTerm + 1);
-//    }
-//
-//    return (
-//        <div>
-//            It is '{mynum.currentTerm}'
-//            <button onClick={increment}>Increment</button>
-//        </div>
-//    );
-//}
+import { CourseHeaderButton } from "./components/course-table.js";
+import { TabWidgetShowcase } from "./components/tab-widget-showcase.js";
 
 const ident = function(x) {
     return x;
@@ -76,6 +62,48 @@ class ButtonAppBar extends Component {
     }
 }
 
+// Menu/home screen component
+class Home extends Component {
+    render() {
+        const closeDrawer = this.props.onClose;
+        return (
+            <div>
+                <Link to="/" onClick={closeDrawer} className="menu-link">
+                    <MenuItem>Home</MenuItem>
+                </Link>
+                <Link
+                    to="/SplitRooms"
+                    onClick={closeDrawer}
+                    className="menu-link"
+                >
+                    <MenuItem>Split Midterm Rooms</MenuItem>
+                </Link>
+                <Link
+                    to="/CourseStats"
+                    onClick={closeDrawer}
+                    className="menu-link"
+                >
+                    <MenuItem>Course Stats</MenuItem>
+                </Link>
+                <Link
+                    to="/AssignRoles"
+                    onClick={closeDrawer}
+                    className="menu-link"
+                >
+                    <MenuItem>Assign Roles</MenuItem>
+                </Link>
+                <Link
+                    to="/WidgetShowcase"
+                    onClick={closeDrawer}
+                    className="menu-link"
+                >
+                    <MenuItem>WidgetShowcase</MenuItem>
+                </Link>
+            </div>
+        );
+    }
+}
+
 class App extends Component {
     constructor(props) {
         super(props);
@@ -87,44 +115,6 @@ class App extends Component {
 
     render() {
         const closeDrawer = () => this.setState({ drawerOpen: false });
-
-        // Menu/home screen component
-        class Home extends Component {
-            render() {
-                return (
-                    <div>
-                        <Link
-                            to="/"
-                            onClick={closeDrawer}
-                            className="menu-link"
-                        >
-                            <MenuItem>Home</MenuItem>
-                        </Link>
-                        <Link
-                            to="/SplitRooms"
-                            onClick={closeDrawer}
-                            className="menu-link"
-                        >
-                            <MenuItem>Split Midterm Rooms</MenuItem>
-                        </Link>
-                        <Link
-                            to="/CourseStats"
-                            onClick={closeDrawer}
-                            className="menu-link"
-                        >
-                            <MenuItem>Course Stats</MenuItem>
-                        </Link>
-                        <Link
-                            to="/AssignRoles"
-                            onClick={closeDrawer}
-                            className="menu-link"
-                        >
-                            <MenuItem>Assign Roles</MenuItem>
-                        </Link>
-                    </div>
-                );
-            }
-        }
 
         return (
             <HashRouter>
@@ -140,12 +130,16 @@ class App extends Component {
                         onTitleClick={() => this.setState({ drawerOpen: true })}
                     />
                     <Drawer open={this.state.drawerOpen} onClose={closeDrawer}>
-                        <Home />
+                        <Home onClose={closeDrawer} />
                     </Drawer>
 
                     <Route path="/SplitRooms" component={SplitRooms} />
                     <Route path="/CourseStats" component={CourseStats} />
                     <Route path="/AssignRoles" component={AssignRoles} />
+                    <Route
+                        path="/WidgetShowcase"
+                        component={TabWidgetShowcase}
+                    />
                     <Route exact path="/" component={Home} />
                 </div>
             </HashRouter>
