@@ -1,0 +1,82 @@
+.ta-tooltip {
+    font-size: larger;
+}
+
+.ta-chip-inner2 > * {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+.ta-chip-inner2 {
+    flex-grow: 1;
+    min-width: 0;
+}
+
+.ta-chip.hours-over,
+.hours-over {
+    background-color: #ff9999;
+}
+.ta-chip.hours-under,
+.hours-under {
+    background-color: #fffd9b;
+}
+.ta-chip.hours-match,
+.hours-match {
+    background-color: #83fb55;
+}
+
+.ta-chip .ta-chip-action {
+    padding: 4px;
+}
+
+.ta-chip .ta-avatar {
+    padding: 4px;
+    padding-right: 5px;
+    margin-left: 3px;
+    margin-right: 2px;
+    height: 30px;
+    font-size: 15px;
+    border-radius: 10px;
+    background-color: rgba(3, 3, 3, .25);
+    color: white;
+}
+
+/* we need to be specific to override MuiChip */
+.ta-chip {
+    border: 3px solid rgba(1, 1, 1, 0);
+    border-left: none;
+    display: inline-flex;
+    border-radius: 10px;
+    width: 15em;
+    font-size: 0.7em;
+    align-items: center;
+    cursor: default;
+    margin: 1px;
+}
+.ta-chip.highlight {
+    border: 3px solid black;
+    border-left: none;
+}
+.ta-chip.highlight-preference-med {
+    border: 3px solid #ffbce6;
+    border-left: none;
+}
+.ta-chip.highlight-preference-hi {
+    border: 3px solid #de33bc;
+    border-left: none;
+}
+.ta-annotation {
+    background-color: #ddd !important;
+}
+.ta-chip-buttons {
+    display: flex;
+}
+.ta-chip-drag-wrapper {
+    display: inline-block;
+}
+
+/* styles for the TA list */
+.ta-list2 {
+    position: relative;
+    width: 100%;
+}

@@ -1,0 +1,57 @@
+.course-table-row {
+    display: flex;
+}
+.course-table-row-body {
+    flex-grow: 1;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.course-table-row .row-division:first-child {
+    flex-grow: 1;
+}
+.course-table-row .row-division {
+    padding-left: 1px;
+    padding-right: 1px;
+    display: flex;
+    flex-direction: column;
+}
+.course-table-row .row-division:nth-child(even) {
+    background-color: rgba(20, 0, 200, 0.07);
+}
+.course-table-row .row-division-header {
+    font-size: smaller;
+    text-align: center;
+    border-bottom: 0.5px solid rgba(0, 0, 0, 0.5);
+}
+.course-table-row .row-division-body {
+    flex-grow: 1;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+/* highlights */
+.course-table-row .filled {
+    background-color: rgb(79, 255, 79);
+}
+.course-table-row .overfilled {
+    background-color: rgb(255, 122, 122);
+}
+.course-table-row {
+    transition: .5s background-color, .5s background;
+}
+.course-table-row.highlight-preference-hi {
+    background-color: rgb(255, 98, 203);
+}
+.course-table-row.highlight-preference-med {
+    background-color: rgb(255, 196, 235);
+}
+.course-table-row.highlight-non-droppable {
+    background: repeating-linear-gradient(
+        45deg,
+        #ffd8f7,
+        #ffd8f7 15px,
+        #ffffff 15px,
+        #ffffff 30px
+    );
+}

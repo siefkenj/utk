@@ -24,10 +24,8 @@ import { CourseStats } from "./CourseStats.js";
 import "./css/App.css";
 import "react-selectize/themes/index.css";
 
-import { useStore, useActions } from "easy-peasy";
-
-import { CourseHeaderButton } from "./components/course-table.js";
 import { TabWidgetShowcase } from "./components/tab-widget-showcase.js";
+import { AssingTAsToCourses } from "./components/tab-assign-tas-to-courses.js";
 
 const ident = function(x) {
     return x;
@@ -93,6 +91,13 @@ class Home extends Component {
                     <MenuItem>Assign Roles</MenuItem>
                 </Link>
                 <Link
+                    to="/AssignTAsToCourses"
+                    onClick={closeDrawer}
+                    className="menu-link"
+                >
+                    <MenuItem>Assign TAs to Courses</MenuItem>
+                </Link>
+                <Link
                     to="/WidgetShowcase"
                     onClick={closeDrawer}
                     className="menu-link"
@@ -136,6 +141,10 @@ class App extends Component {
                     <Route path="/SplitRooms" component={SplitRooms} />
                     <Route path="/CourseStats" component={CourseStats} />
                     <Route path="/AssignRoles" component={AssignRoles} />
+                    <Route
+                        path="/AssignTAsToCourses"
+                        component={AssingTAsToCourses}
+                    />
                     <Route
                         path="/WidgetShowcase"
                         component={TabWidgetShowcase}

@@ -115,10 +115,11 @@ const Session = class Session {
                 return new Session({ term: "S", year: year - 1 });
             case 4:
             case 5:
+                return new Session({ term: "SF", year: year - 1 });
             case 6:
             case 7:
-                return new Session({ term: "SY", year: year - 1 });
             case 8:
+                return new Session({ term: "SS", year: year - 1 });
             case 9:
             case 10:
             case 11:

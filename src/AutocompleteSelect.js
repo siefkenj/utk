@@ -3,7 +3,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
-import { Typography, Input, Menu, MenuItem, Chip } from "@material-ui/core";
+import { Typography, Input, MenuItem, Chip } from "@material-ui/core";
 import { ArrowDropDown, ArrowDropUp, Clear, Cancel } from "@material-ui/icons";
 import Select from "react-select";
 import "react-select/dist/react-select.css";

@@ -18,7 +18,7 @@ import Handsontable from "handsontable";
 
 // from https://stackoverflow.com/questions/3446170/escape-string-for-use-in-javascript-regex
 function escapeRegExp(string) {
-  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
+    return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
 }
 
 // some tools for fuzzy matching
@@ -309,7 +309,7 @@ class TAAssignmentList extends Component {
 
         // We might have a TA whos ID is not recognized. In this
         // case, they don't contribute to the "assigned" count.
-        const numValidTAs = tas.filter(x => !!tasInfo[x]).length
+        const numValidTAs = tas.filter(x => !!tasInfo[x]).length;
 
         let highlighClass = "";
         if (numValidTAs === +courseInfo.openings) {
@@ -596,7 +596,7 @@ class AssignRoles extends Component {
         let ta = this.lookupTa(taId);
         let sourcePos = courses.indexOf(result.source.droppableId);
 
-        let taInfo = tasInfo[ta] || {unknownTA: true};
+        let taInfo = tasInfo[ta] || { unknownTA: true };
         console.log(ta, taInfo, taId);
         let prefs = {
             preferenceH: (taInfo.preferenceH || "")
@@ -862,6 +862,7 @@ class AssignRoles extends Component {
         let formattedAssignmentHash = {};
         // make a hash of all the available assignments
         let hash = {};
+        // eslint-disable-next-line
         for (let [assNum, emp, course, ...rest] of this.tables
             .formattedAssignment) {
             hash[course] = hash[course] || [];
@@ -872,6 +873,7 @@ class AssignRoles extends Component {
             if ((assignedTas || []).length === 0) {
                 continue;
             }
+            // eslint-disable-next-line
             let [formattedCourse, index] = fuzzyCourseFind(course, courseList);
             if (formattedCourse == null) {
                 console.error("Could not find table entry for", course);
@@ -908,10 +910,13 @@ class AssignRoles extends Component {
         for (let row of this.tables.formattedAssignment) {
             let [
                 number,
+                // eslint-disable-next-line
                 employee,
                 courseID,
                 session,
+                // eslint-disable-next-line
                 fhours,
+                // eslint-disable-next-line
                 shours,
                 ...rest
             ] = row;
@@ -963,6 +968,7 @@ class AssignRoles extends Component {
             annotation,
             preferenceH,
             preferenceM,
+            // eslint-disable-next-line
             ...rest
         ] of table) {
             if (ta == null || !ta) {
