@@ -2,9 +2,9 @@ import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import { useStoreState, useStoreActions } from "easy-peasy";
 import { SortableCourseTable } from "./course-table";
-import { AppBar, Tabs, Tab, Button } from "@material-ui/core";
+import { AppBar, Tabs, Tab } from "@material-ui/core";
 import { SaveDataButton, LoadDataButton } from "./savers";
-import { SessionDisplay, SessionSelectWide } from "./term-select";
+import { SessionDisplay } from "./term-select";
 import { Session } from "../libs/session-date";
 import { TASpreadsheet } from "./ta-spreadsheet";
 import { CoursesSpreadsheet } from "./courses-spreadsheet";
@@ -25,13 +25,19 @@ TabPanel.propTypes = {
 
 function AssingTAsToCourses(props) {
     const [currTab, setCurrTab] = React.useState(0);
+    //const [paneState, setPaneState] = React.useState(220);
+    const [paneState, setPaneState] = [
+        useStoreState(state => state.splitPaneValue),
+        useStoreActions(actions => actions.setSplitPaneValue)
+    ];
+    const splitPaneState = { value: paneState, setValue: setPaneState };
     const {
         TAs,
         courses,
         assignments,
         allState,
         currentSession
-    } = useStoreState(state => state.test);
+    } = useStoreState(state => state);
     const {
         updateCourse,
         updateAssignment,
@@ -40,10 +46,15 @@ function AssingTAsToCourses(props) {
         restoreAllState,
         setCurrentSession,
         updateTAs
-    } = useStoreActions(actions => actions.test);
+    } = useStoreActions(actions => actions);
+
+    useEffect(() => {
+        if (!currentSession) {
+            setCurrentSession(new Session());
+        }
+    }, [currentSession]);
 
     if (!currentSession) {
-        setCurrentSession(new Session());
         return null;
     }
 
@@ -62,6 +73,7 @@ function AssingTAsToCourses(props) {
             </AppBar>
             <TabPanel value={currTab} index={0}>
                 <SortableCourseTable
+                    splitPaneState={splitPaneState}
                     TAs={TAs}
                     courses={courses}
                     assignments={assignments}
@@ -95,6 +107,8 @@ function AssingTAsToCourses(props) {
                             onChange={setCurrentSession}
                         />
                     </span>
+                    <div>Total Courses: {Object.keys(courses).length}</div>
+                    <div>Total TAs: {TAs.length}</div>
                 </div>
             </TabPanel>
         </div>

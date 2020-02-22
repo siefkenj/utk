@@ -47,7 +47,7 @@ function parseCell(prop, val) {
         {
             minHours: CELL_PARSERS.int,
             maxHours: CELL_PARSERS.int,
-            firstTime: CELL_PARSERS.bool,
+            previousHire: CELL_PARSERS.bool,
             preferenceH: CELL_PARSERS.list,
             preferenceM: CELL_PARSERS.list
         }[prop] || CELL_PARSERS.string;
@@ -111,26 +111,28 @@ function TASpreadsheet(props) {
                 colHeaders={[
                     "Last",
                     "First",
-                    "UTORid",
                     "email",
+                    "UTORid",
+                    "ID",
                     "annotation",
                     "minHours",
                     "maxHours",
                     "preferenceH",
                     "preferenceM",
-                    "first time?"
+                    "prior experience?"
                 ]}
                 columns={[
-                    { data: "last" },
-                    { data: "first" },
-                    { data: "utorid" },
+                    { data: "last", width: 200 },
+                    { data: "first", width: 200 },
                     { data: "email" },
+                    { data: "utorid" },
+                    { data: "id" },
                     { data: "annotation" },
                     { data: "minHours" },
                     { data: "maxHours" },
-                    { data: "preferenceH" },
-                    { data: "preferenceM" },
-                    { data: "firstTime" }
+                    { data: "preferenceH", width: 300 },
+                    { data: "preferenceM", width: 300 },
+                    { data: "previousHire" }
                 ]}
                 minSpareRows={1}
                 onAfterChange={onAfterChange}

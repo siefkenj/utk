@@ -189,8 +189,10 @@ function TAItem(props) {
         maxHours,
         assigned,
         assignedHours,
+        previousHire,
         H,
-        M
+        M,
+        inSelectedCourse
     } = ta;
 
     const taInfo = {};
@@ -222,18 +224,20 @@ function TAItem(props) {
     if (H) {
         highlightClass = "highlight-preference-hi";
     }
+    let highlightClass2 = inSelectedCourse ? "in-selected-course" : "";
 
     const tooltip = (
         <div className="ta-tooltip">
             <div>
-                {last}, {first} UTORid: {utorid} email: {email}
+                {last}, {first} {!previousHire && "(New)"} UTORid: {utorid}{" "}
+                email: {email}
             </div>
             <div>
                 Assigned: {assignedHours} Min: {minHours} Max: {maxHours}
             </div>
             <div>Assignment: [{(assigned || []).join(", ")}] </div>
-            <div>Preference (High): {preferenceH} </div>
-            <div>Preference (Med): {preferenceM} </div>
+            <div>Preference (High): {(preferenceH || []).join(", ")} </div>
+            <div>Preference (Med): {(preferenceM || []).join(", ")} </div>
         </div>
     );
     return (
@@ -243,10 +247,14 @@ function TAItem(props) {
                     className={classNames([
                         "ta-chip",
                         hoursFilled,
-                        highlightClass
+                        highlightClass,
+                        highlightClass2
                     ])}
                 >
-                    <Avatar className="ta-avatar">{annotation}</Avatar>
+                    <Avatar className="ta-avatar">
+                        {annotation}
+                        {!previousHire && "*"}
+                    </Avatar>
                     <div className={"ta-chip-inner2"}>
                         <div>
                             {name} ({utorid})

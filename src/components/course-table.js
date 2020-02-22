@@ -385,7 +385,8 @@ function SortableCourseTable(props) {
         updateCourse = noop,
         updateAssignment = noop,
         setSelectedTA = noop,
-        toggleSelectedCourse = noop
+        toggleSelectedCourse = noop,
+        splitPaneState = { value: 220, setValue: noop }
     } = props;
 
     // Functions for drag and drop
@@ -441,8 +442,9 @@ function SortableCourseTable(props) {
                 <SplitPane
                     split="vertical"
                     minSize={110}
-                    defaultSize={220}
+                    defaultSize={splitPaneState.value}
                     style={{ overflow: "auto" }}
+                    onChange={splitPaneState.setValue}
                 >
                     <TAList TAs={TAs} />
                     <div style={{ width: "100%", overflow: "auto" }}>

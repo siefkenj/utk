@@ -19,34 +19,31 @@ import { model } from "./model/model.js";
 // Set up our model so that our data is persisted with
 // local storage.
 const PERSIST_KEY = "utkstorage";
-const store = createStore(model, 
-	{
+const store = createStore(model, {
     reducerEnhancer: reducer =>
         persistReducer(
             {
                 key: PERSIST_KEY,
-				storage: storage,
-				blacklist: ["test"]
+                storage: storage,
+                whitelist: []
             },
             reducer
         )
-}
-);
+});
 
 const persistor = persistStore(store);
 // Ensure data is kept in sync across tabs
 crosstabSync(store, { key: PERSIST_KEY });
 
-
 // Set up the app
 function Root() {
-	return (
-		<PersistGate loading={<div>Loading</div>} persistor={persistor}>
-			<StoreProvider store={store}>
-				<App />
-			</StoreProvider>
-		</PersistGate>
-	);
+    return (
+        <PersistGate loading={<div>Loading</div>} persistor={persistor}>
+            <StoreProvider store={store}>
+                <App />
+            </StoreProvider>
+        </PersistGate>
+    );
 }
 
 /*

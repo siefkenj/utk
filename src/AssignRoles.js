@@ -1153,13 +1153,15 @@ class AssignRoles extends Component {
                                     "Max Assignment",
                                     "Annotation",
                                     "Preference (high)",
-                                    "Preference (med)"
+                                    "Preference (med)",
+                                    "Preference (med2)",
+                                    "Preference (med3)"
                                 ]}
                                 rowHeaders={true}
                                 height={600}
                                 onAfterChange={this.taTableChanged}
                                 minSpareRows={1}
-                                minCols={7}
+                                minCols={9}
                             />
                         </div>
                         <div>

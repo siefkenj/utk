@@ -17,6 +17,52 @@ function escapeRegExp(string) {
 }
 
 /**
+ * Returns a new object whose keys match `obj`
+ * but whose values are the result of calling
+ * `func(key, val)` on each key-value pair of `obj`.
+ *
+ * @param {object} obj
+ * @param {function} func
+ * @returns {object}
+ */
+function objectMap(obj, func) {
+    const ret = { ...obj };
+    for (const key in ret) {
+        ret[key] = func(key, ret[key]);
+    }
+    return ret;
+}
+
+/**
+ * Converts an annotation to a number so that M < P < U,
+ * as well as M1 < M2, etc., and ** < o**.
+ *
+ * @param {string} annotation
+ * @returns {number}
+ */
+function annotationToNumber(annotation = "") {
+    if (!annotation) {
+        return 0;
+    }
+    const HASH = {
+        o: 100,
+        M: 10,
+        P: 20,
+        U: 30,
+        1: 1,
+        2: 2,
+        3: 3,
+        4: 4,
+        5: 5,
+        6: 6,
+        7: 7,
+        8: 8,
+        9: 9
+    };
+    return sum(annotation.split("").map(x => HASH[x] || 0));
+}
+
+/**
  * Find `course` in `list` doing a fuzzy search.
  *
  * @param {string} course
@@ -36,6 +82,31 @@ const fuzzyCourseFind = (course, list) => {
     }
     return null;
 };
+
+/**
+ * Returns `true` if `ta` has an active assignment for `course` in
+ * `assignments`.
+ *
+ * @param {object} assignments
+ * @param {string} course
+ * @param {string | TA} ta
+ */
+function hasAssignment(assignments, course, ta) {
+    const utorid = ta.utorid || ta;
+    const assignment = assignments[`${course},${utorid}`];
+    return activeAssignment(assignment);
+}
+
+/**
+ * Returns `true` if `assignment` is an active assignment (i.e.,
+ * is not rejected or deleted)
+ *
+ * @param {object} assignment
+ * @returns {boolean}
+ */
+function activeAssignment(assignment) {
+    return assignment && !assignment.rejected && !assignment.deleted;
+}
 
 /**
  * Returns a unique string key for `session`
@@ -214,7 +285,7 @@ const DEFAULT_TA = {
     preferenceH: [],
     preferenceM: [],
     annotation: "",
-    firstTime: false
+    previousHire: true
 };
 const DEFAULT_ASSIGNMENT = {
     course: "",
@@ -235,7 +306,11 @@ const otherState = {
     _currentSession: null,
     _selectedTA: null,
     _selectedCourses: {},
-    _modelDataBySession: {}
+    _modelDataBySession: {},
+    splitPaneValue: 220,
+    setSplitPaneValue: action((state, payload) => {
+        state.splitPaneValue = +payload;
+    })
 };
 
 // Computed view of the model. Components access these properties
@@ -320,7 +395,7 @@ const modelView = {
         for (const utorid in state._TAs) {
             const TA = state._TAs[utorid];
             const TAsAssignments = Object.values(state._assignments).filter(
-                x => x.ta === utorid && !x.rejected && !x.deleted
+                x => x.ta === utorid && activeAssignment(x)
             );
             TA.assigned = TAsAssignments.map(x => x.course);
             TA.assignedHours = sum(TAsAssignments.map(x => x.hours));
@@ -339,9 +414,20 @@ const modelView = {
                     ([course, selected]) =>
                         selected && fuzzyCourseFind(course, TA.preferenceM)
                 ) || undefined;
+            TA.inSelectedCourse =
+                Object.entries(state._selectedCourses).some(
+                    ([course, selected]) =>
+                        selected &&
+                        hasAssignment(state._assignments, course, TA)
+                ) || undefined;
 
             ret.push(TA);
         }
+        ret.sort(
+            (a, b) =>
+                annotationToNumber(a.annotation) >
+                annotationToNumber(b.annotation)
+        );
         return ret;
         //Object.values(state._TAs)
     }),
@@ -350,7 +436,7 @@ const modelView = {
         const ret = {};
         for (const assignment of Object.values(state._assignments)) {
             // rejected assignments don't show up in this list
-            if (assignment.rejected || assignment.deleted) {
+            if (!activeAssignment(assignment)) {
                 continue;
             }
             ret[assignment.course] = ret[assignment.course] || [];
@@ -374,12 +460,12 @@ const updateFunctions = {
      * restores all state passed in to `payload`; Unsupplied values
      * are replaced with defaults from `dataModel`
      */
-    restoreAllState: action((state, payload) => {
+    restoreAllState: (state, payload) => {
         for (const prop in dataModel) {
             state[prop] = payload[prop] || dataModel[prop];
         }
-    }),
-    setCurrentSession: action((state, payload) => {
+    },
+    setCurrentSession: (state, payload) => {
         const prevSessionKey = sessionToStr(state._currentSession);
         state._currentSession = payload;
         const newSessionKey = sessionToStr(state._currentSession);
@@ -397,19 +483,19 @@ const updateFunctions = {
                 (state._modelDataBySession[newSessionKey] || {})[prop] ||
                 dataModel[prop];
         }
-    }),
-    setSelectedTA: action((state, payload) => {
+    },
+    setSelectedTA: (state, payload) => {
         if (!payload) {
             state._selectedTA = null;
             return;
         }
         const utorid = payload.utorid || payload;
         state._selectedTA = state._TAs[utorid];
-    }),
-    toggleSelectedCourse: action((state, payload) => {
+    },
+    toggleSelectedCourse: (state, payload) => {
         state._selectedCourses[payload] = !state._selectedCourses[payload];
-    }),
-    updateCourse: action((state, payload) => {
+    },
+    updateCourse: (state, payload) => {
         const {
             omitHistory,
             message,
@@ -450,23 +536,24 @@ const updateFunctions = {
             }
         }
         state._courses[courseCode] = newCourse;
-    }),
-    updateTA: action(updateSingleTA),
-    updateTAs: action((state, payload) => {
+    },
+    updateTA: updateSingleTA,
+    updateTAs: (state, payload) => {
         for (const ta of payload) {
             updateSingleTA(state, ta);
         }
-    }),
-    updateAssignment: action(updateSingleAssignment)
+    },
+    updateAssignment: updateSingleAssignment
 };
 
 const model = deepmerge.all([
     otherState,
     dataModel,
     modelView,
-    updateFunctions
+    objectMap(updateFunctions, (key, val) => action(val))
 ]);
+//window.aa = action;
 // make a duplicate of the model for testing
-model.test = { ...model };
+//model.test = { ...model };
 //console.log("modle", model)
 export { model };

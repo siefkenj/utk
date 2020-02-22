@@ -32,19 +32,18 @@
 .ta-chip .ta-avatar {
     padding: 4px;
     padding-right: 5px;
-    margin-left: 3px;
+    margin-left: 0px;
     margin-right: 2px;
     height: 30px;
     font-size: 15px;
     border-radius: 10px;
-    background-color: rgba(3, 3, 3, .25);
+    background-color: rgba(3, 3, 3, 0.25);
     color: white;
 }
 
 /* we need to be specific to override MuiChip */
 .ta-chip {
     border: 3px solid rgba(1, 1, 1, 0);
-    border-left: none;
     display: inline-flex;
     border-radius: 10px;
     width: 15em;
@@ -55,18 +54,16 @@
 }
 .ta-chip.highlight {
     border: 3px solid black;
-    border-left: none;
 }
 .ta-chip.highlight-preference-med {
     border: 3px solid #ffbce6;
-    border-left: none;
 }
 .ta-chip.highlight-preference-hi {
     border: 3px solid #de33bc;
-    border-left: none;
 }
-.ta-annotation {
-    background-color: #ddd !important;
+.ta-chip.highlight-preference-hi.in-selected-course,
+.ta-chip.highlight-preference-med.in-selected-course {
+    border-style: dotted;
 }
 .ta-chip-buttons {
     display: flex;
