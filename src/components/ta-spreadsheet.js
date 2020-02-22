@@ -49,7 +49,9 @@ function parseCell(prop, val) {
             maxHours: CELL_PARSERS.int,
             previousHire: CELL_PARSERS.bool,
             preferenceH: CELL_PARSERS.list,
-            preferenceM: CELL_PARSERS.list
+            preferenceM: CELL_PARSERS.list,
+            preferenceM2: CELL_PARSERS.list,
+            preferenceM3: CELL_PARSERS.list
         }[prop] || CELL_PARSERS.string;
 
     if (!val || typeof val === "string") {

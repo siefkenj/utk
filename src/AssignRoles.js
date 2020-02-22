@@ -231,6 +231,12 @@ class TA extends Component {
             highlightClass += " highlight-1";
         } else if (highlight === 2) {
             highlightClass += " highlight-2";
+        } else if (highlight === 3) {
+            highlightClass += " highlight-3";
+        } else if (highlight === 4) {
+            highlightClass += " highlight-4";
+        } else if (highlight === 5) {
+            highlightClass += " highlight-5";
         } else if (highlight) {
             highlightClass += " highlight";
         }
@@ -265,6 +271,12 @@ class TA extends Component {
                 )}
                 {taInfo.preferenceM && (
                     <div>Preference (Med): {taInfo.preferenceM} </div>
+                )}
+                {taInfo.preferenceM2 && (
+                    <div>Preference (Med2): {taInfo.preferenceM2} </div>
+                )}
+                {taInfo.preferenceM3 && (
+                    <div>Preference (Med3): {taInfo.preferenceM3} </div>
                 )}
             </div>
         );
@@ -553,7 +565,12 @@ class AssignRoles extends Component {
     getDroppablePositions(
         ta = null,
         allowPos = -1,
-        prefs = { preferenceH: [], preferenceM: [] }
+        prefs = {
+            preferenceH: [],
+            preferenceM: [],
+            preferenceM2: [],
+            preferenceM3: []
+        }
     ) {
         // get an array of which columns the specified TA may be dropped on.
         // prefs contain high and medium preferences for courses
@@ -565,7 +582,19 @@ class AssignRoles extends Component {
         }
         return courses.map((course, index) => {
             let matchLevel = 1;
-            // match high preferences
+            // match preferences in reverse-precedence order
+            // so that higher-priority precedences get the last say
+            for (let pref of prefs.preferenceM3) {
+                if (course.match(escapeRegExp(pref))) {
+                    console.log("MATCHED MED PREF", pref, course);
+                    matchLevel = 5;
+                }
+            }
+            for (let pref of prefs.preferenceM2) {
+                if (course.match(escapeRegExp(pref))) {
+                    matchLevel = 4;
+                }
+            }
             for (let pref of prefs.preferenceM) {
                 if (course.match(escapeRegExp(pref))) {
                     matchLevel = 2;
@@ -604,6 +633,14 @@ class AssignRoles extends Component {
                 .map(x => x.trim())
                 .filter(x => !!x),
             preferenceM: (taInfo.preferenceM || "")
+                .split(",")
+                .map(x => x.trim())
+                .filter(x => !!x),
+            preferenceM2: (taInfo.preferenceM2 || "")
+                .split(",")
+                .map(x => x.trim())
+                .filter(x => !!x),
+            preferenceM3: (taInfo.preferenceM3 || "")
                 .split(",")
                 .map(x => x.trim())
                 .filter(x => !!x)
@@ -702,6 +739,14 @@ class AssignRoles extends Component {
                 preferenceM: (taInfo.preferenceM || "")
                     .split(",")
                     .map(x => x.trim())
+                    .filter(x => !!x),
+                preferenceM2: (taInfo.preferenceM2 || "")
+                    .split(",")
+                    .map(x => x.trim())
+                    .filter(x => !!x),
+                preferenceM3: (taInfo.preferenceM3 || "")
+                    .split(",")
+                    .map(x => x.trim())
                     .filter(x => !!x)
             };
         }
@@ -716,6 +761,19 @@ class AssignRoles extends Component {
             let prefs = tasPrefs[ta];
             let inPrefs = selectedCoursesList.map((course, index) => {
                 let matchLevel = 0;
+                // match preferences in reverse-precedence order
+                // so that higher-priority precedences get the last say
+                for (let pref of prefs.preferenceM3) {
+                    if (course.match(escapeRegExp(pref))) {
+                        console.log("MATCHED MED PREF", pref, course);
+                        matchLevel = 5;
+                    }
+                }
+                for (let pref of prefs.preferenceM2) {
+                    if (course.match(escapeRegExp(pref))) {
+                        matchLevel = 4;
+                    }
+                }
                 for (let pref of prefs.preferenceM) {
                     // escapeRegExp needs to be escaped because .match calls `new RegExp(...)` on the string
                     if (course.match(escapeRegExp(pref))) {
@@ -968,6 +1026,8 @@ class AssignRoles extends Component {
             annotation,
             preferenceH,
             preferenceM,
+            preferenceM2,
+            preferenceM3,
             // eslint-disable-next-line
             ...rest
         ] of table) {
@@ -984,7 +1044,9 @@ class AssignRoles extends Component {
                 assignedHours: 0,
                 annotation: (annotation || "").trim(),
                 preferenceH,
-                preferenceM
+                preferenceM,
+                preferenceM2,
+                preferenceM3
             };
         }
 
@@ -1046,6 +1108,7 @@ class AssignRoles extends Component {
         const droppablePositions = this.state.droppablePositions;
         const currTab = this.state.currTab;
 
+        console.log(droppablePositions);
         return (
             <div
                 style={{

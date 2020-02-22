@@ -1,4 +1,6 @@
-html, body, #root {
+html,
+body,
+#root {
     height: 100%;
     width: 100%;
 }
@@ -36,12 +38,9 @@ html, body, #root {
     }
 }
 
-
 .term-item-container.highlight {
     background-color: #fde;
 }
-
-
 
 .menubar-button {
     margin-left: -12px !important;
@@ -66,7 +65,6 @@ html, body, #root {
     font-size: smaller;
     color: gray;
 }
-
 
 .menu-link {
     text-decoration: none;
@@ -116,7 +114,7 @@ html, body, #root {
     flex-grow: 1;
     display: flex;
     flex-wrap: wrap;
-    border-left: 2px solid rgba(1,1,1,0);
+    border-left: 2px solid rgba(1, 1, 1, 0);
     transition: all 0.4s;
 }
 .course-name-container {
@@ -126,16 +124,27 @@ html, body, #root {
     background-color: #de33bc;
 }
 .droppable-2 {
-    background-color: #ffbce6;
+    background-color: #ffbcbc;
 }
-.droppable-1, .droppable-2, .droppable-3 {
+/* preferenceM2 */
+.droppable-4 {
+    background-color: #cef8ff;
+}
+/* preferenceM3 */
+.droppable-5 {
+    background-color: #e6ecff;
+}
+.droppable-1,
+.droppable-2,
+.droppable-3,
+.droppable-4,
+.droppable-5 {
     /* background-color: #bfefff; */
     border-left: 2px solid #504fff;
 }
 .droppable-0 {
-   /* background-color: rgba(1, 1, 1, 0); */
+    /* background-color: rgba(1, 1, 1, 0); */
 }
-
 
 .sub {
     text-transform: none;
@@ -158,31 +167,45 @@ html, body, #root {
     width: 120px;
 }
 
-.ta-chip.hours-over, .hours-over {
+.ta-chip.hours-over,
+.hours-over {
     background-color: #ff9999;
 }
-.ta-chip.hours-under, .hours-under {
+.ta-chip.hours-under,
+.hours-under {
     background-color: #fffd9b;
 }
-.ta-chip.hours-match, .hours-match {
+.ta-chip.hours-match,
+.hours-match {
     background-color: #83fb55;
 }
 
 /* we need to be specific to override MuiChip */
 .ta-chip.ta-chip-2 {
-    border: 2px solid rgba(1,1,1,0);
+    border: 2px solid rgba(1, 1, 1, 0);
     border-left: none;
 }
-.ta-chip.highlight {
+.ta-chip.highlight,
+.ta-chip.highlight-2,
+.ta-chip.highlight-1,
+.ta-chip.highlight-4,
+.ta-chip.highlight-5 {
     border: 2px solid black;
     border-left: none;
+    box-shadow: 0px 0px 4px 1px rgba(0, 0, 0, 0.4);
 }
 .ta-chip.highlight-1 {
-    border: 2px solid #ffbce6;
-    border-left: none;
+    border-color: #de33bc;
 }
 .ta-chip.highlight-2 {
-    border: 2px solid #de33bc;
+    border-color: #ffbcbc;
+}
+.ta-chip.highlight-4 {
+    border-color: #cef8ff;
+}
+.ta-chip.highlight-5 {
+    border-color: #e6ecff;
+    border-style: dashed;
     border-left: none;
 }
 .ta-annotation {
@@ -190,82 +213,61 @@ html, body, #root {
 }
 
 
+/*
+* Styles for the new part of the app start here.
+*/
+.Resizer {
+    background: #000;
+    opacity: 0.2;
+    z-index: 1;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    -moz-background-clip: padding;
+    -webkit-background-clip: padding;
+    background-clip: padding-box;
+}
 
+.Resizer:hover {
+    -webkit-transition: all 2s ease;
+    transition: all 2s ease;
+}
 
+.Resizer.horizontal {
+    height: 11px;
+    margin: -5px 0;
+    border-top: 5px solid rgba(255, 255, 255, 0);
+    border-bottom: 5px solid rgba(255, 255, 255, 0);
+    cursor: row-resize;
+    width: 100%;
+}
 
+.Resizer.horizontal:hover {
+    border-top: 5px solid rgba(0, 0, 0, 0.5);
+    border-bottom: 5px solid rgba(0, 0, 0, 0.5);
+}
 
+.Resizer.vertical {
+    width: 11px;
+    margin: 0 -5px;
+    border-left: 5px solid rgba(255, 255, 255, 0);
+    border-right: 5px solid rgba(255, 255, 255, 0);
+    cursor: col-resize;
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    .Resizer {
-        background: #000;
-        opacity: .2;
-        z-index: 1;
-        -moz-box-sizing: border-box;
-        -webkit-box-sizing: border-box;
-        box-sizing: border-box;
-        -moz-background-clip: padding;
-        -webkit-background-clip: padding;
-        background-clip: padding-box;
-    }
-
-     .Resizer:hover {
-        -webkit-transition: all 2s ease;
-        transition: all 2s ease;
-    }
-
-     .Resizer.horizontal {
-        height: 11px;
-        margin: -5px 0;
-        border-top: 5px solid rgba(255, 255, 255, 0);
-        border-bottom: 5px solid rgba(255, 255, 255, 0);
-        cursor: row-resize;
-        width: 100%;
-    }
-
-    .Resizer.horizontal:hover {
-        border-top: 5px solid rgba(0, 0, 0, 0.5);
-        border-bottom: 5px solid rgba(0, 0, 0, 0.5);
-    }
-
-    .Resizer.vertical {
-        width: 11px;
-        margin: 0 -5px;
-        border-left: 5px solid rgba(255, 255, 255, 0);
-        border-right: 5px solid rgba(255, 255, 255, 0);
-        cursor: col-resize;
-    }
-
-    .Resizer.vertical:hover {
-        border-left: 5px solid rgba(0, 0, 0, 0.5);
-        border-right: 5px solid rgba(0, 0, 0, 0.5);
-    }
-    .Resizer.disabled {
-      cursor: not-allowed;
-    }
-    .Resizer.disabled:hover {
-      border-color: transparent;
-    }
-    .Pane.vertical {
-        display: flex;
-    }
-
+.Resizer.vertical:hover {
+    border-left: 5px solid rgba(0, 0, 0, 0.5);
+    border-right: 5px solid rgba(0, 0, 0, 0.5);
+}
+.Resizer.disabled {
+    cursor: not-allowed;
+}
+.Resizer.disabled:hover {
+    border-color: transparent;
+}
+.Pane.vertical {
+    display: flex;
+}
 
 .imbalanced-assignment {
     background-color: #ffe800 !important;
