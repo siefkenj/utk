@@ -765,7 +765,6 @@ class AssignRoles extends Component {
                 // so that higher-priority precedences get the last say
                 for (let pref of prefs.preferenceM3) {
                     if (course.match(escapeRegExp(pref))) {
-                        console.log("MATCHED MED PREF", pref, course);
                         matchLevel = 5;
                     }
                 }
@@ -777,13 +776,13 @@ class AssignRoles extends Component {
                 for (let pref of prefs.preferenceM) {
                     // escapeRegExp needs to be escaped because .match calls `new RegExp(...)` on the string
                     if (course.match(escapeRegExp(pref))) {
-                        matchLevel = 1;
+                        matchLevel = 2;
                     }
                 }
                 // match high preferences
                 for (let pref of prefs.preferenceH) {
                     if (course.match(escapeRegExp(pref))) {
-                        matchLevel = 2;
+                        matchLevel = 1;
                     }
                 }
                 return matchLevel;
