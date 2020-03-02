@@ -40,7 +40,7 @@ function TADetailsDialog(props) {
     const [hours, setHours] = useProp(assignment.hours, !rest.open);
     const [message, setMessage] = React.useState("");
 
-    if (!rest.dialogOpen) {
+    if (!rest.open) {
         return null
     }
 
