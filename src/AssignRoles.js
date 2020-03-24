@@ -884,7 +884,8 @@ class AssignRoles extends Component {
         for (let course of courses) {
             let courseInfo = coursesInfo[course];
             for (let ta of assignments[course] || []) {
-                let taInfo = tasInfo[ta];
+                // If the TA is not found because of an invalid utorID, fake it
+                let taInfo = tasInfo[ta] || { name: ta };
                 let newRow = [
                     course,
                     ta,
@@ -949,7 +950,8 @@ class AssignRoles extends Component {
                 }
                 formattedAssignmentHash[number] = {
                     id: ta,
-                    name: tasInfo[ta].name,
+                    // If `ta` is not a valid UTORid, have a valid fallback
+                    name: (tasInfo[ta] || { name: ta }).name,
                     ...splitFSHours(
                         course,
                         coursesInfo,
