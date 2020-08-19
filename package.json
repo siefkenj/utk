@@ -22,7 +22,7 @@
     "react-dom-factories": "^1.0.0",
     "react-handsontable": "^0.3.2",
     "react-router-dom": "^4.3.1",
-    "react-scripts": "^3.0.1",
+    "react-scripts": "^3.4.3",
     "react-select": "^1.3.0",
     "react-selectize": "^3.0.1",
     "react-split-pane": "^0.1.87",
