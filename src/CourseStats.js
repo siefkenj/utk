@@ -68,6 +68,11 @@ class CourseStats extends Component {
                 let startHours = time.start;
                 let endHours = time.end;
                 let day = time.day;
+                if (day == null) {
+                    // It is possible that the course never meets. In this case, `day` will be null,
+                    // but we don't want to crash!
+                    continue
+                }
                 let start = moment(weekStart)
                     .day(day)
                     .add(startHours, "h");
