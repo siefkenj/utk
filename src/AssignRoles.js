@@ -7,7 +7,7 @@ import {
     Tooltip,
     BottomNavigation,
     BottomNavigationAction,
-    Button
+    Button,
 } from "@material-ui/core";
 import { ViewList, TouchApp } from "@material-ui/icons";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
@@ -19,6 +19,15 @@ import Handsontable from "handsontable";
 // from https://stackoverflow.com/questions/3446170/escape-string-for-use-in-javascript-regex
 function escapeRegExp(string) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
+}
+
+function round(num, places = 4) {
+    const realNum = +num;
+    if (isNaN(realNum)) {
+        return num;
+    }
+    const pow = Math.pow(10, places);
+    return Math.round(pow * realNum) / pow;
 }
 
 // some tools for fuzzy matching
@@ -47,7 +56,7 @@ const fuzzyCourseFind = (course, list) => {
         );
         return [
             list[initHash[shortCourse.slice(0, 6)]],
-            initHash[shortCourse.slice(0, 6)]
+            initHash[shortCourse.slice(0, 6)],
         ];
     }
     const rep_table = {
@@ -58,7 +67,7 @@ const fuzzyCourseFind = (course, list) => {
         "PG MAC F": "PG F",
         "PG MAC S": "PG S",
         "NC MAC F": "NC F",
-        "NC MAC S": "NC S"
+        "NC MAC S": "NC S",
     };
 
     if (list.indexOf(rep_table[course]) >= 0) {
@@ -87,12 +96,12 @@ const splitFSHours = (
             3: [-2, -1, -1],
             4: [-1, -1, -1, -1],
             5: [-1, -1, -1, -1, 0],
-            6: [-1, -1, -1, -1, 0, 0]
+            6: [-1, -1, -1, -1, 0, 0],
         };
         // create a canonicalized list of fall courses the TA is in.
         let currCourses = tasInfo[ta].assigned;
         currCourses = currCourses.filter(
-            c => c.endsWith("F") || c.endsWith("Y")
+            (c) => c.endsWith("F") || c.endsWith("Y")
         );
         if (currCourses.length === 0 && tasInfo[ta].assigned.length > 0) {
             // if there are no F or Y courses, we have to use S courses
@@ -129,13 +138,13 @@ const getItemStyle = (isDragging, draggableStyle) => ({
     //background: isDragging ? 'lightgreen' : 'red',
 
     // styles we need to apply on draggables
-    ...draggableStyle
+    ...draggableStyle,
 });
 
-const getListStyle = isDraggingOver => ({
+const getListStyle = (isDraggingOver) => ({
     //background: isDraggingOver ? "lightblue" : "grey",
     padding: grid * 3,
-    minWidth: 110
+    minWidth: 110,
 });
 
 class TAList extends Component {
@@ -150,7 +159,7 @@ class TAList extends Component {
                             display: "flex",
                             width: "100%",
                             flexDirection: "column",
-                            ...getListStyle(droppableSnapshot.isDraggingOver)
+                            ...getListStyle(droppableSnapshot.isDraggingOver),
                         }}
                     >
                         <div>TA List</div>
@@ -253,9 +262,7 @@ class TA extends Component {
         );
         const avatar = taInfo.annotation ? (
             <Avatar className="ta-annotation">{taInfo.annotation}</Avatar>
-        ) : (
-            undefined
-        );
+        ) : undefined;
         const tooltip = (
             <div>
                 <div>
@@ -319,9 +326,9 @@ class TAAssignmentList extends Component {
         } = this.props;
         courseInfo = courseInfo || { openings: "?", hoursPerAssignment: "?" };
 
-        // We might have a TA whos ID is not recognized. In this
+        // We might have a TA whose ID is not recognized. In this
         // case, they don't contribute to the "assigned" count.
-        const numValidTAs = tas.filter(x => !!tasInfo[x]).length;
+        const numValidTAs = tas.filter((x) => !!tasInfo[x]).length;
 
         let highlighClass = "";
         if (numValidTAs === +courseInfo.openings) {
@@ -389,7 +396,7 @@ class TAAssignmentList extends Component {
                             style={{
                                 ...getListStyle(
                                     droppableSnapshot.isDraggingOver
-                                )
+                                ),
                             }}
                             className={"ta-row-tas " + otherProps.className}
                         >
@@ -414,7 +421,7 @@ class AssignRoles extends Component {
             assignments: {},
             droppablePositions: [],
             selectedCourses: {},
-            currTab: "table"
+            currTab: "table",
         };
 
         this.tables = {
@@ -427,7 +434,7 @@ class AssignRoles extends Component {
             ) || [[]],
             firstTimeTas: JSON.parse(
                 window.localStorage.getItem("tables.firstTimeTas")
-            ) || [[]]
+            ) || [[]],
         };
 
         let taState = {},
@@ -456,7 +463,7 @@ class AssignRoles extends Component {
         this.getDroppablePositions = this.getDroppablePositions.bind(this);
     }
 
-    lookupTa = taId => {
+    lookupTa = (taId) => {
         const tas = this.state.tas;
         let index = tas.indexOf(taId);
         if (index > -1) {
@@ -495,7 +502,7 @@ class AssignRoles extends Component {
             }
         }
         // update the state
-        this.setState(prevState => {
+        this.setState((prevState) => {
             const assignments = { ...prevState.assignments, [course]: newDat };
 
             // update the table when we update the state
@@ -512,12 +519,12 @@ class AssignRoles extends Component {
             this.saveTable("courses");
 
             return {
-                assignments
+                assignments,
             };
         });
     }
 
-    saveTable = tableName => {
+    saveTable = (tableName) => {
         if (!(tableName in this.tables)) {
             console.warn("Cannot save table named", tableName, "name unknown");
             return;
@@ -555,7 +562,7 @@ class AssignRoles extends Component {
             newInfo[ta] = {
                 ...tasInfo[ta],
                 assigned: assigned[ta],
-                assignedHours: assignedHours[ta]
+                assignedHours: assignedHours[ta],
             };
         }
 
@@ -569,7 +576,7 @@ class AssignRoles extends Component {
             preferenceH: [],
             preferenceM: [],
             preferenceM2: [],
-            preferenceM3: []
+            preferenceM3: [],
         }
     ) {
         // get an array of which columns the specified TA may be dropped on.
@@ -612,7 +619,7 @@ class AssignRoles extends Component {
         });
     }
 
-    onDragStart = result => {
+    onDragStart = (result) => {
         const courses = this.state.courses;
         const tasInfo = this.state.tasInfo;
 
@@ -630,20 +637,20 @@ class AssignRoles extends Component {
         let prefs = {
             preferenceH: (taInfo.preferenceH || "")
                 .split(",")
-                .map(x => x.trim())
-                .filter(x => !!x),
+                .map((x) => x.trim())
+                .filter((x) => !!x),
             preferenceM: (taInfo.preferenceM || "")
                 .split(",")
-                .map(x => x.trim())
-                .filter(x => !!x),
+                .map((x) => x.trim())
+                .filter((x) => !!x),
             preferenceM2: (taInfo.preferenceM2 || "")
                 .split(",")
-                .map(x => x.trim())
-                .filter(x => !!x),
+                .map((x) => x.trim())
+                .filter((x) => !!x),
             preferenceM3: (taInfo.preferenceM3 || "")
                 .split(",")
-                .map(x => x.trim())
-                .filter(x => !!x)
+                .map((x) => x.trim())
+                .filter((x) => !!x),
         };
 
         let droppablePositions = this.getDroppablePositions(
@@ -653,7 +660,7 @@ class AssignRoles extends Component {
         );
 
         this.setState({
-            droppablePositions
+            droppablePositions,
         });
     };
 
@@ -687,7 +694,7 @@ class AssignRoles extends Component {
 
         this.updateAssignment("add", destCourse, ta, result.destination.index);
         this.setState({
-            droppablePositions: this.getDroppablePositions(null)
+            droppablePositions: this.getDroppablePositions(null),
         });
     }
 
@@ -695,14 +702,14 @@ class AssignRoles extends Component {
         this.updateAssignment("remove", course, ta);
     };
 
-    toggleSelect = course => {
-        this.setState(prevState => {
+    toggleSelect = (course) => {
+        this.setState((prevState) => {
             let courseSelectState = prevState.selectedCourses[course];
             return {
                 selectedCourses: {
                     ...prevState.selectedCourses,
-                    [course]: !courseSelectState
-                }
+                    [course]: !courseSelectState,
+                },
             };
         });
     };
@@ -734,20 +741,20 @@ class AssignRoles extends Component {
             tasPrefs[ta] = {
                 preferenceH: (taInfo.preferenceH || "")
                     .split(",")
-                    .map(x => x.trim())
-                    .filter(x => !!x),
+                    .map((x) => x.trim())
+                    .filter((x) => !!x),
                 preferenceM: (taInfo.preferenceM || "")
                     .split(",")
-                    .map(x => x.trim())
-                    .filter(x => !!x),
+                    .map((x) => x.trim())
+                    .filter((x) => !!x),
                 preferenceM2: (taInfo.preferenceM2 || "")
                     .split(",")
-                    .map(x => x.trim())
-                    .filter(x => !!x),
+                    .map((x) => x.trim())
+                    .filter((x) => !!x),
                 preferenceM3: (taInfo.preferenceM3 || "")
                     .split(",")
-                    .map(x => x.trim())
-                    .filter(x => !!x)
+                    .map((x) => x.trim())
+                    .filter((x) => !!x),
             };
         }
 
@@ -841,7 +848,7 @@ class AssignRoles extends Component {
         this.saveTable("firstTimeTas");
     };
 
-    createAssignmentsTable = tasInfo => {
+    createAssignmentsTable = (tasInfo) => {
         const tas = this.state.tas;
         const coursesInfo = this.state.coursesInfo;
         const courses = this.state.courses;
@@ -857,7 +864,7 @@ class AssignRoles extends Component {
                 taInfo.minHours,
                 taInfo.maxHours,
                 taInfo.annotation,
-                taInfo.assignedHours
+                round(taInfo.assignedHours),
             ];
             // compute the F and S hours.
             let fHours = 0,
@@ -872,8 +879,8 @@ class AssignRoles extends Component {
                     sHours += +coursesInfo[course].hoursPerAssignment / 2;
                 }
             }
-            newRow.push(fHours);
-            newRow.push(sHours);
+            newRow.push(round(fHours));
+            newRow.push(round(sHours));
             newRow = newRow.concat(taInfo.assigned || []);
             ret.push(newRow);
         }
@@ -884,7 +891,7 @@ class AssignRoles extends Component {
         for (let course of courses) {
             let courseInfo = coursesInfo[course];
             for (let ta of assignments[course] || []) {
-                // If the TA is not found because of an invalid utorID, fake it
+                // If the TA is not found because of an invalid utorid, fake it
                 let taInfo = tasInfo[ta] || { name: ta };
                 let newRow = [
                     course,
@@ -892,7 +899,7 @@ class AssignRoles extends Component {
                     taInfo.name,
                     courseInfo.hoursPerAssignment,
                     (taInfo.assigned || []).length,
-                    taInfo.assignedHours
+                    taInfo.assignedHours,
                 ];
                 ret.push(newRow);
             }
@@ -904,7 +911,7 @@ class AssignRoles extends Component {
         return true;
     };
 
-    createFormattedAssignmentsTable = tasInfo => {
+    createFormattedAssignmentsTable = (tasInfo) => {
         //        const tas = this.state.tas;
         const coursesInfo = this.state.coursesInfo;
         //        const courses = this.state.courses;
@@ -958,7 +965,7 @@ class AssignRoles extends Component {
                         ta,
                         tasInfo,
                         firstTimeTas[ta]
-                    )
+                    ),
                 };
             }
         }
@@ -994,7 +1001,7 @@ class AssignRoles extends Component {
                 rowInfo.fhours,
                 rowInfo.shours,
                 ...rest,
-                rowInfo.deduction
+                rowInfo.deduction,
             ]);
         }
         this.tables.formattedAssignment = ret;
@@ -1004,7 +1011,7 @@ class AssignRoles extends Component {
         return true;
     };
 
-    taInfoFromTable = table => {
+    taInfoFromTable = (table) => {
         let getUniqueName = (used, proposed) => {
             if (proposed in used) {
                 let num = 1;
@@ -1047,7 +1054,7 @@ class AssignRoles extends Component {
                 preferenceH,
                 preferenceM,
                 preferenceM2,
-                preferenceM3
+                preferenceM3,
             };
         }
 
@@ -1068,13 +1075,13 @@ class AssignRoles extends Component {
                 course,
                 courseInfo.openings,
                 courseInfo.hoursPerAssignment,
-                ...assignment
+                ...assignment,
             ]);
         }
         return ret;
     };
 
-    coursesTableToState = table => {
+    coursesTableToState = (table) => {
         let courses = [],
             coursesInfo = {},
             assignments = {};
@@ -1084,13 +1091,13 @@ class AssignRoles extends Component {
             }
             courses.push(course);
             coursesInfo[course] = { openings, hoursPerAssignment };
-            assignments[course] = tas.filter(x => x != null && x);
+            assignments[course] = tas.filter((x) => x != null && x);
         }
 
         return { courses, coursesInfo, assignments };
     };
 
-    changeTab = (event, value) => {
+    changeTab = (_event, value) => {
         this.setState({ currTab: value });
     };
 
@@ -1109,13 +1116,12 @@ class AssignRoles extends Component {
         const droppablePositions = this.state.droppablePositions;
         const currTab = this.state.currTab;
 
-        console.log(droppablePositions);
         return (
             <div
                 style={{
                     flexGrow: 1,
                     display: "flex",
-                    flexDirection: "column"
+                    flexDirection: "column",
                 }}
             >
                 <div>
@@ -1219,7 +1225,7 @@ class AssignRoles extends Component {
                                     "Preference (high)",
                                     "Preference (med)",
                                     "Preference (med2)",
-                                    "Preference (med3)"
+                                    "Preference (med3)",
                                 ]}
                                 rowHeaders={true}
                                 height={600}
@@ -1236,10 +1242,10 @@ class AssignRoles extends Component {
                                 colHeaders={[
                                     "Course",
                                     "Spots",
-                                    "Hours/Spot"
+                                    "Hours/Spot",
                                 ].concat(
                                     [...Array(60).keys()].map(
-                                        k => "TA " + (k + 1)
+                                        (k) => "TA " + (k + 1)
                                     )
                                 )}
                                 rowHeaders={true}
@@ -1267,20 +1273,20 @@ class AssignRoles extends Component {
                                     "Annotation",
                                     "Given",
                                     "Given F",
-                                    "Given S"
+                                    "Given S",
                                 ].concat(
                                     [...Array(7).keys()].map(
-                                        k => "Assignment " + (k + 1)
+                                        (k) => "Assignment " + (k + 1)
                                     )
                                 )}
-                                columns={[...Array(15).keys()].map(k => {
+                                columns={[...Array(15).keys()].map((k) => {
                                     return { readOnly: true };
                                 })}
                                 rowHeaders={true}
                                 height={600}
                                 minSpareRows={1}
                                 minCols={15}
-                                cells={function(row, col) {
+                                cells={function (row, col) {
                                     let cellProperties = {};
                                     if (col === 6 || col === 7) {
                                         let data = this.instance.getDataAtRow(
@@ -1288,7 +1294,7 @@ class AssignRoles extends Component {
                                         );
                                         // determine if there is a big imbalance between fall and spring
                                         if (Math.abs(data[6] - data[7]) > 30) {
-                                            cellProperties.renderer = function(
+                                            cellProperties.renderer = function (
                                                 instance,
                                                 td,
                                                 row,
@@ -1321,9 +1327,9 @@ class AssignRoles extends Component {
                                     "Name",
                                     "Hours",
                                     "All Assignments",
-                                    "All Hours"
+                                    "All Hours",
                                 ]}
-                                columns={[...Array(15).keys()].map(k => {
+                                columns={[...Array(15).keys()].map((k) => {
                                     return { readOnly: true };
                                 })}
                                 rowHeaders={true}
@@ -1374,9 +1380,9 @@ class AssignRoles extends Component {
                                         "Year",
                                         "FallMonth",
                                         "WinterMonth",
-                                        "Training Deduction"
+                                        "Training Deduction",
                                     ]}
-                                    columns={[...Array(17).keys()].map(k => {
+                                    columns={[...Array(17).keys()].map((k) => {
                                         // The "EmployeeID" column is dynamically computed
                                         if (k === 1) {
                                             return { readOnly: true };
