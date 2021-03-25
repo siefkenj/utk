@@ -256,7 +256,8 @@ class TA extends Component {
                     {taInfo.name} ({taInfo.id})
                 </div>
                 <div>
-                    {taInfo.assignedHours} / {taInfo.minHours}-{taInfo.maxHours}
+                    {round(taInfo.assignedHours)} / {round(taInfo.minHours)}-
+                    {round(taInfo.maxHours)}
                 </div>
             </div>
         );
@@ -347,9 +348,9 @@ class TAAssignmentList extends Component {
                         <div>{course}</div>
                         <div className="stats-container">
                             <span className="sub">Hours:</span>
-                            {courseInfo.hoursPerAssignment}
+                            {round(courseInfo.hoursPerAssignment)}
                             <span className="sub">Filled:</span>
-                            {numValidTAs}/{courseInfo.openings}
+                            {numValidTAs}/{round(courseInfo.openings)}
                         </div>
                     </div>
                 </Button>
