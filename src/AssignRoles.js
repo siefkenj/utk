@@ -30,6 +30,17 @@ function round(num, places = 4) {
     return Math.round(pow * realNum) / pow;
 }
 
+function roundSpreadsheet(sheet, places = 4) {
+    return sheet.map((row) =>
+        row.map((item) => {
+            if (typeof item === "number") {
+                return round(item, places);
+            }
+            return item;
+        })
+    );
+}
+
 // some tools for fuzzy matching
 
 // Find `course` in `list` doing a fuzzy search
@@ -270,8 +281,8 @@ class TA extends Component {
                     {taInfo.name} UTORid: {taInfo.id}
                 </div>
                 <div>
-                    Assigned: {taInfo.assignedHours} Min: {taInfo.minHours} Max:{" "}
-                    {taInfo.maxHours}
+                    Assigned: {round(taInfo.assignedHours)} Min:{" "}
+                    {round(taInfo.minHours)} Max: {round(taInfo.maxHours)}
                 </div>
                 <div>Assignment: [{(taInfo.assigned || []).join(", ")}] </div>
                 {taInfo.preferenceH && (
@@ -1321,7 +1332,9 @@ class AssignRoles extends Component {
                             <HotTable
                                 root="hot4"
                                 ref="hot4"
-                                data={this.tables.assignmentByCourse}
+                                data={roundSpreadsheet(
+                                    this.tables.assignmentByCourse
+                                )}
                                 colHeaders={[
                                     "Course",
                                     "UTORid",
