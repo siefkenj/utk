@@ -28,7 +28,7 @@
     "react-split-pane": "^0.1.87",
     "react-transition-group": "^1.1.2",
     "redux-persist": "^5.10.0",
-    "xlsx": "^0.14.3"
+    "xlsx": "^0.17.0"
   },
   "scripts": {
     "start": "PORT=3004 react-scripts start",
