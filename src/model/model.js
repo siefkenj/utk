@@ -57,9 +57,9 @@ function annotationToNumber(annotation = "") {
         6: 6,
         7: 7,
         8: 8,
-        9: 9
+        9: 9,
     };
-    return sum(annotation.split("").map(x => HASH[x] || 0));
+    return sum(annotation.split("").map((x) => HASH[x] || 0));
 }
 
 /**
@@ -73,7 +73,7 @@ const fuzzyCourseFind = (course, list) => {
     course = course.replace(/\s+/g, "").toLocaleLowerCase();
     const normalizedList = list.map((x, i) => [
         escapeRegExp(x.replace(/\s+/g, "").toLocaleLowerCase()),
-        i
+        i,
     ]);
     for (const [c, i] of normalizedList) {
         if (course.match(c)) {
@@ -199,7 +199,7 @@ function updateSingleAssignment(state, payload) {
     if (payload.replaceAssignment && payload.replaceAssignment.course) {
         const oldKey = [
             payload.replaceAssignment.course,
-            payload.replaceAssignment.ta
+            payload.replaceAssignment.ta,
         ];
         // If there is an old assignment and a new assignment, that is trouble
         if (
@@ -229,7 +229,7 @@ function updateSingleAssignment(state, payload) {
         ...assignment,
         deleted: false,
         ...payload,
-        ta: utorid
+        ta: utorid,
     };
     if (!omitHistory) {
         const diff = objectDiff(assignment, newAssignment, DEFAULT_ASSIGNMENT);
@@ -238,7 +238,7 @@ function updateSingleAssignment(state, payload) {
             newAssignment.history.push({
                 ...diff,
                 _message: message,
-                _date: new Date().toISOString()
+                _date: new Date().toISOString(),
             });
         }
     }
@@ -259,7 +259,7 @@ function updateSingleTA(state, payload) {
     // create a TA if there wasn't one before
     state._TAs[utorid] = state._TAs[utorid] || {
         ...deepmerge(DEFAULT_TA, {}),
-        utorid
+        utorid,
     };
     state._TAs[utorid].utorid = utorid;
     if (deleteAction) {
@@ -272,7 +272,7 @@ function updateSingleTA(state, payload) {
 const DEFAULT_COURSE = {
     course: "DEFAULT COURSE",
     hours: 0,
-    defaultAssignment: 0
+    defaultAssignment: 0,
 };
 const DEFAULT_TA = {
     utorid: "",
@@ -285,21 +285,21 @@ const DEFAULT_TA = {
     preferenceH: [],
     preferenceM: [],
     annotation: "",
-    previousHire: true
+    previousHire: true,
 };
 const DEFAULT_ASSIGNMENT = {
     course: "",
     ta: "<utorid>",
     hours: 0,
     rejected: false,
-    deleted: false
+    deleted: false,
 };
 
 // The actual data that is stored. This data is not accessed directly
 const dataModel = {
     _courses: {},
     _assignments: {}, // indexed by [course,utorid]
-    _TAs: {}
+    _TAs: {},
 };
 
 const otherState = {
@@ -310,7 +310,7 @@ const otherState = {
     splitPaneValue: 220,
     setSplitPaneValue: action((state, payload) => {
         state.splitPaneValue = +payload;
-    })
+    }),
 };
 
 // Computed view of the model. Components access these properties
@@ -319,22 +319,22 @@ const modelView = {
      * Get all state for saving/restoring. This only returns true state,
      * and does not include any computed properties.
      */
-    allState: computed(state => {
+    allState: computed((state) => {
         const ret = {};
         for (const prop in dataModel) {
             ret[prop] = state[prop];
         }
         return ret;
     }),
-    currentSession: computed(state => state._currentSession),
-    courses: computed(state => {
+    currentSession: computed((state) => state._currentSession),
+    courses: computed((state) => {
         // `hoursAssigned` and `numAssigned` are automatically
         // computed when getting a list of courses
         const assignments = state.assignments;
         function computeStats(course) {
             return {
-                hoursAssigned: sum(assignments[course].map(x => +x.hours)),
-                numAssigned: assignments[course].length
+                hoursAssigned: sum(assignments[course].map((x) => +x.hours)),
+                numAssigned: assignments[course].length,
             };
         }
 
@@ -342,10 +342,10 @@ const modelView = {
         // current TA that is selected
         const highlights = {
             M: (state._selectedTA || {}).preferenceM || [],
-            H: (state._selectedTA || {}).preferenceH || []
+            H: (state._selectedTA || {}).preferenceH || [],
         };
         function computeHighlight(course) {
-            const ret = {};
+            const ret = { M: false, H: false };
             for (const [level, preferences] of Object.entries(highlights)) {
                 if (fuzzyCourseFind(course, preferences)) {
                     ret[level] = true;
@@ -365,17 +365,17 @@ const modelView = {
                 // to see if we're there
                 if (
                     state.assignments[course].some(
-                        x => x.ta.utorid === state._selectedTA.utorid
+                        (x) => x.ta.utorid === state._selectedTA.utorid
                     )
                 ) {
                     return { isNotDroppable: true };
                 }
             }
-            return {};
+            return { isNotDroppable: false };
         }
 
         function computeToggled(course) {
-            return { isSelected: state._selectedCourses[course] };
+            return { isSelected: !!state._selectedCourses[course] };
         }
 
         const ret = {};
@@ -385,20 +385,20 @@ const modelView = {
                 ...computeStats(course),
                 ...computeHighlight(course),
                 ...computeDroppable(course),
-                ...computeToggled(course)
+                ...computeToggled(course),
             };
         }
         return ret;
     }),
-    TAs: computed(state => {
+    TAs: computed((state) => {
         const ret = [];
         for (const utorid in state._TAs) {
             const TA = state._TAs[utorid];
             const TAsAssignments = Object.values(state._assignments).filter(
-                x => x.ta === utorid && activeAssignment(x)
+                (x) => x.ta === utorid && activeAssignment(x)
             );
-            TA.assigned = TAsAssignments.map(x => x.course);
-            TA.assignedHours = sum(TAsAssignments.map(x => x.hours));
+            TA.assigned = TAsAssignments.map((x) => x.course);
+            TA.assignedHours = sum(TAsAssignments.map((x) => x.hours));
             // What is stored in the TA data might be empty. In this case
             // we want to use the key as the utorid
             TA.utorid = TA.utorid || utorid;
@@ -431,7 +431,7 @@ const modelView = {
         return ret;
         //Object.values(state._TAs)
     }),
-    assignments: computed(state => {
+    assignments: computed((state) => {
         // return an object indexed by courses containing all the assignments
         const ret = {};
         for (const assignment of Object.values(state._assignments)) {
@@ -445,14 +445,14 @@ const modelView = {
                 // If the TA with utorid `assignment.ta` has been deleted,
                 // create a "fake" ta with the same utorid. This will allow
                 // the invalid assignment to be deleted in the UI
-                ta: state._TAs[assignment.ta] || { utorid: assignment.ta }
+                ta: state._TAs[assignment.ta] || { utorid: assignment.ta },
             });
         }
         for (const course in state._courses) {
             ret[course] = ret[course] || [];
         }
         return ret;
-    })
+    }),
 };
 
 const updateFunctions = {
@@ -531,7 +531,7 @@ const updateFunctions = {
                 newCourse.history.push({
                     ...diff,
                     _message: message,
-                    _date: new Date().toISOString()
+                    _date: new Date().toISOString(),
                 });
             }
         }
@@ -543,14 +543,14 @@ const updateFunctions = {
             updateSingleTA(state, ta);
         }
     },
-    updateAssignment: updateSingleAssignment
+    updateAssignment: updateSingleAssignment,
 };
 
 const model = deepmerge.all([
     otherState,
     dataModel,
     modelView,
-    objectMap(updateFunctions, (key, val) => action(val))
+    objectMap(updateFunctions, (key, val) => action(val)),
 ]);
 //window.aa = action;
 // make a duplicate of the model for testing
