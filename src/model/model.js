@@ -402,7 +402,7 @@ const modelView = {
             // What is stored in the TA data might be empty. In this case
             // we want to use the key as the utorid
             TA.utorid = TA.utorid || utorid;
-            // check to see if any of our prefferred courses are selected
+            // check to see if any of our preferred courses are selected
             // and set highlight tags appropriately
             TA.H =
                 Object.entries(state._selectedCourses).some(

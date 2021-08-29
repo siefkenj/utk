@@ -13,15 +13,17 @@ import {
     Dialog,
     DialogTitle,
     Tabs,
-    Tab
+    Tab,
 } from "@material-ui/core";
 import PropTypes from "prop-types";
 //import { withStyles } from "material-ui/styles";
 //import indigo from "material-ui/colors/indigo";
 import deepPurple from "@material-ui/core/colors/deepPurple";
 import { Courses } from "./utils.js";
+import { flattenCourseInfo } from "./flatten-course-info.ts";
+import FileSaver from "file-saver";
 
-const ident = function(x) {
+const ident = function (x) {
     return x;
 };
 
@@ -57,7 +59,7 @@ class TermItem extends Component {
         }
     }
 
-    _handleDialogClose = value => {
+    _handleDialogClose = (value) => {
         this.setState({ dialogOpen: false });
         (this.props.onChange || ident)(value);
     };
@@ -106,7 +108,7 @@ class TermItem extends Component {
         const { editable, onClick, highlight, ...other } = this.props;
         let classNames = "";
         if (highlight) {
-            classNames += " highlight term-item-container"
+            classNames += " highlight term-item-container";
         }
         return (
             <div className={classNames}>
@@ -132,7 +134,7 @@ class TermItem extends Component {
                     open={this.state.dialogOpen}
                     selectedValue={{
                         term: this.props.term,
-                        year: this.props.year
+                        year: this.props.year,
                     }}
                     onClose={this._handleDialogClose}
                     sessions={this._getTermList()}
@@ -142,7 +144,7 @@ class TermItem extends Component {
     }
 }
 TermItem.propTypes = {
-    editable: PropTypes.bool
+    editable: PropTypes.bool,
 };
 
 class SessionSelectDialog extends Component {
@@ -159,17 +161,17 @@ class SessionSelectDialog extends Component {
         this.props.onClose(this.props.selectedValue);
     };
 
-    handleListItemClick = value => {
+    handleListItemClick = (value) => {
         this.props.onClose(value);
     };
 
-    _getSessions = (session, selectedValue={}) => {
+    _getSessions = (session, selectedValue = {}) => {
         let len = 1;
         if (session === "summer") {
             len = 2;
         }
         let filtered = (this.props.sessions || []).filter(
-            x => x.term.length === len
+            (x) => x.term.length === len
         );
         return filtered.map(({ term, year }, index) => (
             <TermItem
@@ -178,7 +180,11 @@ class SessionSelectDialog extends Component {
                 year={year}
                 key={index}
                 onClick={() => this.handleListItemClick({ term, year })}
-                highlight={ (term === selectedValue.term && year === selectedValue.year) || undefined }
+                highlight={
+                    (term === selectedValue.term &&
+                        year === selectedValue.year) ||
+                    undefined
+                }
             />
         ));
     };
@@ -198,16 +204,14 @@ class SessionSelectDialog extends Component {
                 aria-labelledby="simple-dialog-title"
                 {...other}
             >
-                <Tabs
-                    value={tabValue}
-                    onChange={this.handleTabChange}
-                >
+                <Tabs value={tabValue} onChange={this.handleTabChange}>
                     <Tab label="Standard" />
                     <Tab label="Summer" />
                 </Tabs>
                 <List>
                     {tabValue === 0 && this._getSessions("fall", selectedValue)}
-                    {tabValue === 1 && this._getSessions("summer", selectedValue)}
+                    {tabValue === 1 &&
+                        this._getSessions("summer", selectedValue)}
                 </List>
             </Dialog>
         );
@@ -215,13 +219,13 @@ class SessionSelectDialog extends Component {
 }
 
 SessionSelectDialog.propTypes = {
-    onClose: PropTypes.func
+    onClose: PropTypes.func,
 };
 
 // Course-realted components
 
 class CourseCode extends Component {
-    _splitName = name => {
+    _splitName = (name) => {
         // separate the course code from the rest of the information (e.g, turn MAT135H1 into [MAT135, H1]
         return [name.slice(0, 6), name.slice(6)];
     };
@@ -236,64 +240,88 @@ class CourseCode extends Component {
     }
 }
 
-class CourseItem extends Component {
-    render() {
-        const iconStyle = {
-            verticalAlign: "middle",
-            marginLeft: "12px"
-        };
-        const textStyle = {
-            position: "relative",
-            paddingLeft: "8px",
-            paddingRight: "16px",
-            verticalAlign: "middle",
-            letterSpacing: "0px"
-        };
+function CourseItem(props) {
+    const iconStyle = {
+        verticalAlign: "middle",
+        marginLeft: "12px",
+    };
+    const textStyle = {
+        position: "relative",
+        paddingLeft: "8px",
+        paddingRight: "16px",
+        verticalAlign: "middle",
+        letterSpacing: "0px",
+    };
+    const { onClick, ...other } = props;
+    return (
+        <ListItem onClick={onClick || ident} {...other}>
+            <Tooltip
+                title={
+                    <div>
+                        <div>Lecture Sections: {props.info.lec}</div>
+                        <div>Tutorial Sections: {props.info.tut}</div>
+                        <div>Students: {props.info.students}</div>
+                    </div>
+                }
+            >
+                <ListItemAvatar>
+                    <Avatar
+                        style={{
+                            backgroundColor: deepPurple[300],
+                        }}
+                    >
+                        <Icon>school</Icon>
+                    </Avatar>
+                </ListItemAvatar>
+            </Tooltip>
+            <ListItemText
+                primary={<CourseCode code={props.course} />}
+                secondary={
+                    <span className="course-stats">
+                        <Icon style={iconStyle}>location_city</Icon>
+                        <span style={textStyle}>{props.info.lec}</span>
+                        <Icon style={iconStyle}>edit</Icon>
+                        <span style={textStyle}>{props.info.tut}</span>
+                        <Icon style={iconStyle}>people</Icon>
+                        <span style={textStyle}>{props.info.students}</span>
+                    </span>
+                }
+            />
+            <List
+                style={{
+                    flex: "0 1 auto",
+                }}
+            >
+                {props.term && <TermItem term={props.term} year={props.year} />}
+            </List>
+            {props.term && (
+                <List>
+                    <Button
+                        onClick={() => {
+                            const flattenedData = flattenCourseInfo(props.info);
+                            const csv = flattenedData
+                                .map((dat) => dat.join(","))
+                                .join("\n");
+                            const file = new File(
+                                [csv],
 
-        const { onClick, ...other } = this.props;
-        return (
-            <ListItem onClick={onClick || ident} {...other}>
-                <Tooltip
-                    title={
-                        <div>
-                            <div>Lecture Sections: {this.props.info.lec}</div>
-                            <div>Tutorial Sections: {this.props.info.tut}</div>
-                            <div>Students: {this.props.info.students}</div>
-                        </div>
-                    }
-                >
-                    <ListItemAvatar>
-                        <Avatar style={{ backgroundColor: deepPurple[300] }}>
-                            <Icon>school</Icon>
-                        </Avatar>
-                    </ListItemAvatar>
-                </Tooltip>
-                <ListItemText
-                    primary={<CourseCode code={this.props.course} />}
-                    secondary={
-                        <span className="course-stats">
-                            <Icon style={iconStyle}>location_city</Icon>
-                            <span style={textStyle}>{this.props.info.lec}</span>
-                            <Icon style={iconStyle}>edit</Icon>
-                            <span style={textStyle}>{this.props.info.tut}</span>
-                            <Icon style={iconStyle}>people</Icon>
-                            <span style={textStyle}>
-                                {this.props.info.students}
-                            </span>
-                        </span>
-                    }
-                />
-                <List style={{ flex: "0 1 auto" }}>
-                    {this.props.term && (
-                        <TermItem
-                            term={this.props.term}
-                            year={this.props.year}
-                        />
-                    )}
+                                `${
+                                    props.info.course
+                                }-enrollments-${new Date().toISOString().slice(
+                                    0,
+                                    10
+                                )}.csv`,
+                                { type: "text/csv" }
+                            );
+                            FileSaver.saveAs(file);
+                        }}
+                    >
+                        <Icon>download</Icon>
+                    </Button>
                 </List>
-            </ListItem>
-        );
-    }
+            )}
+        </ListItem>
+    );
 }
 
 class CourseSelect extends Component {
@@ -309,7 +337,7 @@ class CourseSelect extends Component {
         let session = { term, year };
         let course = this.state.courseCode;
         this.coursesInfo = new Courses();
-        this.coursesInfo.fetch({ session, course }).then(courses => {
+        this.coursesInfo.fetch({ session, course }).then((courses) => {
             if (courses.length > 0) {
                 this.setState({ courseInfo: courses });
                 this.setState({ showList: true });
@@ -318,17 +346,17 @@ class CourseSelect extends Component {
         });
     };
 
-    _onSelected = course => {
+    _onSelected = (course) => {
         this.setState({
             showList: false,
-            selectedCourse: course
+            selectedCourse: course,
         });
         if (this.props.onChange) {
             this.props.onChange(course);
         }
     };
 
-    _onKeyPress = event => {
+    _onKeyPress = (event) => {
         if (event.key === "Enter") {
             this._getCourseInfo();
         }
@@ -343,9 +371,9 @@ class CourseSelect extends Component {
                 <TextField
                     label="Course Code"
                     value={this.state.courseCode}
-                    onChange={event =>
+                    onChange={(event) =>
                         this.setState({
-                            courseCode: event.target.value.toUpperCase()
+                            courseCode: event.target.value.toUpperCase(),
                         })
                     }
                     onKeyPress={this._onKeyPress}
@@ -381,7 +409,7 @@ class CourseSelectDialog extends Component {
         this.props.onClose(this.props.selectedValue);
     };
 
-    handleListItemClick = value => {
+    handleListItemClick = (value) => {
         this.props.onClose(value);
     };
 
@@ -405,7 +433,7 @@ class CourseSelectDialog extends Component {
                                 course={info.courseCode}
                                 info={info}
                                 key={key}
-                                onClick={event => {
+                                onClick={(event) => {
                                     this.handleListItemClick(info);
                                 }}
                             />

@@ -10,7 +10,7 @@
     "ajv": "^6.10.1",
     "deepmerge": "^3.3.0",
     "easy-peasy": "^3.0.0-rc.6",
-    "file-saver": "^2.0.2",
+    "file-saver": "^2.0.5",
     "handsontable": "^6.2.2",
     "js-combinatorics": "^0.5.4",
     "localforage": "^1.7.3",
