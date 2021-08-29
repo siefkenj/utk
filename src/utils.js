@@ -8,8 +8,8 @@ class Courses {
 
         let { term, year } = session;
         let { lastName } = instructor || { lastName: "" };
-        const parseJSON = response => response.json();
-        const parseResponse = response => {
+        const parseJSON = (response) => response.json();
+        const parseResponse = (response) => {
             this.data = response;
             this.courses = [];
 
@@ -22,7 +22,7 @@ class Courses {
                     new Course({
                         course: code,
                         session: session,
-                        data: course
+                        data: course,
                     })
                 );
             }
@@ -32,23 +32,19 @@ class Courses {
         // We fetch once with the given session and onces with the equivalent "Y" session
         // because "Y" overlaps all other sessions
         const fetch1 = fetch(
-            `//www.math.toronto.edu/siefkenj/get_course_info.php?year=${year}&session=${term}&course=${
-                this.course
-            }&instructor=${lastName}`
+            `//www.math.toronto.edu/siefkenj/get_course_info.php?year=${year}&session=${term}&course=${this.course}&instructor=${lastName}`
         )
             .then(parseJSON)
             .then(parseResponse);
-        const ySession = term.length <= 1 ? "Y" : term.charAt(0) + "Y"
+        const ySession = term.length <= 1 ? "Y" : term.charAt(0) + "Y";
         const fetch2 = fetch(
-            `//www.math.toronto.edu/siefkenj/get_course_info.php?year=${year}&session=${ySession}&course=${
-                this.course
-            }&instructor=${lastName}`
+            `//www.math.toronto.edu/siefkenj/get_course_info.php?year=${year}&session=${ySession}&course=${this.course}&instructor=${lastName}`
         )
             .then(parseJSON)
             .then(parseResponse);
 
-        this.fetchPromise = Promise.all([fetch1, fetch2]).then(values => {
-            return values[0].concat(values[1])
+        this.fetchPromise = Promise.all([fetch1, fetch2]).then((values) => {
+            return values[0].concat(values[1]);
         });
         return this.fetchPromise;
     }
@@ -94,18 +90,19 @@ class Lecture {
         this.data = data;
 
         this.students = parseInt(data.actualEnrolment, 10) || 0;
+        this.waitlist = parseInt(data.actualWaitlist, 10) || 0;
         this.cap = parseInt(data.enrollmentCapacity, 10) || 0;
         this.type = data.teachingMethod;
         this.instructor = Object.values(data.instructors)[0];
         this.section = data.sectionNumber;
         this.sectionNumber = this.section;
         this.name = this.type + " " + this.section;
-        this.times = Object.values(data.schedule).map(x => {
+        this.times = Object.values(data.schedule).map((x) => {
             return {
                 day: x.meetingDay,
                 room: x.assignedRoom1 || x.assignedRoom2,
                 start: Lecture.parseHour(x.meetingStartTime),
-                end: Lecture.parseHour(x.meetingEndTime)
+                end: Lecture.parseHour(x.meetingEndTime),
             };
         });
     }
