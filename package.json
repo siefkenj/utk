@@ -7,7 +7,7 @@
     "@handsontable/react": "^2.1.0",
     "@material-ui/core": "^3.9.3",
     "@material-ui/icons": "^3.0.2",
-    "ajv": "^6.10.1",
+    "ajv": "^6.12.3",
     "deepmerge": "^3.3.0",
     "easy-peasy": "^3.0.0-rc.6",
     "file-saver": "^2.0.5",
