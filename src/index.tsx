@@ -15,6 +15,7 @@ import { crosstabSync } from "./libs/redux-persist-crosstab";
 
 import "./css/index.css";
 import App from "./App";
+import packageJson from "../package.json";
 
 // Data model
 import { model } from "./model/model";
@@ -58,3 +59,4 @@ function Root() {
 }
 */
 ReactDOM.createRoot(document.getElementById("root")).render(<Root />);
+window.document.title += " " + packageJson.version;
