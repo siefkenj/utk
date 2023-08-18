@@ -1,5 +1,5 @@
 import React from "react";
-import { useProp } from "../libs/hooks.js";
+import { useProp } from "../libs/hooks";
 import classNames from "classnames";
 import { Draggable, Droppable } from "react-beautiful-dnd";
 

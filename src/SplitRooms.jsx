@@ -14,10 +14,10 @@ import {
     Button
 } from "@material-ui/core";
 
-import { ROOMS } from "./rooms.js";
+import { ROOMS } from "./rooms";
 
-import { TermItem } from "./Components.js";
-import { AutocompleteSelect } from "./AutocompleteSelect.js";
+import { TermItem } from "./Components";
+import { AutocompleteSelect } from "./AutocompleteSelect";
 import HotTable from "react-handsontable";
 import Combinatorics from "js-combinatorics";
 window.Combinatorics = Combinatorics;
