@@ -10,16 +10,17 @@ import {
     Dialog,
     DialogTitle,
     DialogActions,
-    DialogContent
+    DialogContent,
 } from "@material-ui/core";
 import PropTypes from "prop-types";
 import IconButton from "@material-ui/core/IconButton";
 import ArrowLeft from "@material-ui/icons/ArrowLeft";
 import ArrowRight from "@material-ui/icons/ArrowRight";
 
-import { Session, progressInSession } from "../libs/session-date.js";
+import { Session, progressInSession } from "../libs/session-date";
 
 import "../css/term-select.css";
+import { DateRange, Edit } from "@material-ui/icons";
 
 // Select a session/term showing the previous and future sessions
 function SessionSelectWide(props) {
@@ -55,11 +56,11 @@ function SessionSelectWide(props) {
     const progress = progressInSession(
         today,
         { year: startYear },
-        { year: endYear }
+        { year: endYear },
     );
 
     const yearsLabels = Array.from(new Array(endYear - startYear + 1)).map(
-        (a, b) => b + startYear
+        (a, b) => b + startYear,
     );
 
     // build up table rows
@@ -68,7 +69,7 @@ function SessionSelectWide(props) {
         row3 = [];
     for (let year of yearsLabels) {
         const selected = {
-            year: selectedSession.year === year
+            year: selectedSession.year === year,
         };
         selected.y =
             selected.year && ["Y", "F", "S"].includes(selectedSession.term);
@@ -87,91 +88,91 @@ function SessionSelectWide(props) {
                 onClick={selectSessionFactory({ year: year, term: "F" })}
             >
                 {Session.formatYear(year)}
-            </div>
+            </div>,
         );
         // Row for Y sessions
         row2.push(
             <div
                 className={classNames({
                     "session-y": true,
-                    selected: selected.y
+                    selected: selected.y,
                 })}
                 key={year + "Y"}
                 onClick={selectSessionFactory({ year: year, term: "F" })}
             >
                 Y
-            </div>
+            </div>,
         );
         row2.push(
             <div
                 className={classNames({
                     "session-y": true,
                     selected: selected.sy,
-                    summer: true
+                    summer: true,
                 })}
                 key={year + "SY"}
                 onClick={selectSessionFactory({ year: year, term: "SF" })}
             >
                 Summer Y
-            </div>
+            </div>,
         );
         // Row for F/S sessions
         row3.push(
             <div
                 className={classNames({
                     "session-f": true,
-                    selected: selected.f
+                    selected: selected.f,
                 })}
                 key={year + "F"}
                 onClick={selectSessionFactory({ year: year, term: "F" })}
             >
                 F
-            </div>
+            </div>,
         );
         row3.push(
             <div
                 className={classNames({
                     "session-s": true,
-                    selected: selected.s
+                    selected: selected.s,
                 })}
                 key={year + "S"}
                 onClick={selectSessionFactory({ year: year, term: "S" })}
             >
                 S
-            </div>
+            </div>,
         );
         row3.push(
             <div
                 className={classNames({
                     "session-f": true,
                     selected: selected.sf,
-                    summer: true
+                    summer: true,
                 })}
                 key={year + "SF"}
                 onClick={selectSessionFactory({ year: year, term: "SF" })}
             >
                 F
-            </div>
+            </div>,
         );
         row3.push(
             <div
                 className={classNames({
                     "session-s": true,
                     selected: selected.ss,
-                    summer: true
+                    summer: true,
                 })}
                 key={year + "SS"}
                 onClick={selectSessionFactory({ year: year, term: "SS" })}
             >
                 S
-            </div>
+            </div>,
         );
     }
 
     return (
         <div className="tswc">
             <div className="term-selector-container">
-                <div style={{marginRight: 3}}>
+                <div style={{ marginRight: 3 }}>
                     <IconButton
                         aria-label="Previous Year"
                         onClick={() => setStartYear(startYear - 1)}
@@ -189,14 +190,16 @@ function SessionSelectWide(props) {
                         <div
                             className="year-progress-arrow"
                             style={{ left: `${100 * progress}%` }}
-							onClick={selectSessionFactory(Session.fromDate(today))}
+                            onClick={selectSessionFactory(
+                                Session.fromDate(today),
+                            )}
                         >
                             <div className="year-progress-arrow-marker">⌃</div>
                             <div>Today</div>
                         </div>
                     </div>
                 </div>
-                <div style={{marginLeft: 3}}>
+                <div style={{ marginLeft: 3 }}>
                     <IconButton
                         aria-label="Next Year"
                         onClick={() => setStartYear(startYear + 1)}
@@ -212,7 +215,7 @@ SessionSelectWide.propTypes = {
     selectedSession: PropTypes.object,
     today: PropTypes.instanceOf(Date),
     startYear: PropTypes.object,
-    onClick: PropTypes.func
+    onClick: PropTypes.func,
 };
 
 // Display the current session with an optional edit button
@@ -234,14 +237,14 @@ function SessionDisplay({ session, editable, onChange, ...rest }) {
                 {editable && (
                     <Avatar>
                         <Button color="primary" onClick={toggleDialogState}>
-                            <Icon>edit</Icon>
+                            <Edit />
                         </Button>
                     </Avatar>
                 )}
                 <ListItemText
                     primary={
                         <span>
-                            <Icon className="inline-icon">date_range</Icon>
+                            <DateRange className="inline-icon" />
                             {session.prettyYear}
                         </span>
                     }
@@ -260,7 +263,7 @@ function SessionDisplay({ session, editable, onChange, ...rest }) {
 SessionDisplay.propTypes = {
     session: PropTypes.object.isRequired,
     editable: PropTypes.bool,
-    onChange: PropTypes.func
+    onChange: PropTypes.func,
 };
 
 // Dialog to
@@ -273,7 +276,7 @@ function SessionSelectDialog({ onClose, onChange, currentSession, ...rest }) {
     if (!rest.open) {
         if (
             !Session.ensure(propCurrentSession).equal(
-                Session.ensure(currentSession)
+                Session.ensure(currentSession),
             )
         ) {
             setCurrentSession(propCurrentSession);
@@ -291,7 +294,7 @@ function SessionSelectDialog({ onClose, onChange, currentSession, ...rest }) {
                 <div style={{ minWidth: "700px", minHeight: "100px" }}>
                     <SessionSelectWide
                         selectedSession={currentSession}
-                        onClick={session => setCurrentSession(session)}
+                        onClick={(session) => setCurrentSession(session)}
                     />
                 </div>
             </DialogContent>

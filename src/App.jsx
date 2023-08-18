@@ -9,25 +9,26 @@ import {
     Button,
     Icon,
     Toolbar,
-    Typography
+    Typography,
 } from "@material-ui/core";
 //import PropTypes from "prop-types";
 import CssBaseline from "@material-ui/core/CssBaseline";
 
 import { Route, Link, HashRouter } from "react-router-dom";
 
-import { Session } from "./libs/session-date.js";
-import { SplitRooms } from "./SplitRooms.js";
-import { AssignRoles } from "./AssignRoles.js";
-import { CourseStats } from "./CourseStats.js";
+import { Session } from "./libs/session-date";
+import { SplitRooms } from "./SplitRooms";
+import { AssignRoles } from "./AssignRoles";
+import { CourseStats } from "./CourseStats";
 //import moment from 'moment';
 import "./css/App.css";
 import "react-selectize/themes/index.css";
 
-import { TabWidgetShowcase } from "./components/tab-widget-showcase.js";
-import { AssingTAsToCourses } from "./components/tab-assign-tas-to-courses.js";
+import { TabWidgetShowcase } from "./components/tab-widget-showcase";
+import { AssingTAsToCourses } from "./components/tab-assign-tas-to-courses";
+import { Menu } from "@material-ui/icons";
 
-const ident = function(x) {
+const ident = function (x) {
     return x;
 };
 
@@ -42,7 +43,7 @@ class ButtonAppBar extends Component {
                             className="menubar-button"
                             onClick={this.props.onTitleClick || ident}
                         >
-                            <Icon>menu</Icon>
+                            <Menu />
                         </IconButton>
                         <Typography
                             type="title"
@@ -127,7 +128,7 @@ class App extends Component {
                     style={{
                         display: "flex",
                         flexDirection: "column",
-                        height: "100%"
+                        height: "100%",
                     }}
                 >
                     <CssBaseline />

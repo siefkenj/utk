@@ -6,12 +6,12 @@ import {
     Typography,
 } from "@material-ui/core";
 
-import { ROOMS } from "./rooms.js";
+import { ROOMS } from "./rooms";
 
-import { CourseSelect } from "./Components.js";
-import { SessionDisplay } from "./components/term-select.js"
-import { Session } from "./libs/session-date.js"
-import { Courses } from "./utils.js";
+import { CourseSelect } from "./Components";
+import { SessionDisplay } from "./components/term-select"
+import { Session } from "./libs/session-date"
+import { Courses } from "./utils";
 
 import BigCalendar from "react-big-calendar";
 import TimeGrid from "react-big-calendar/lib/TimeGrid";

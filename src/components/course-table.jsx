@@ -1,5 +1,5 @@
 import React from "react";
-import { useProp } from "../libs/hooks.js";
+import { useProp } from "../libs/hooks";
 //import classNames from "classnames";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
@@ -21,7 +21,7 @@ import IconButton from "@material-ui/core/IconButton";
 import EditIcon from "@material-ui/icons/Edit";
 
 import "../css/course-table.css";
-import { TAItem, TAList } from "./ta-display.js";
+import { TAItem, TAList } from "./ta-display";
 import SplitPane from "react-split-pane";
 
 function CourseDetailsDialog(props) {

@@ -19,9 +19,17 @@ import PropTypes from "prop-types";
 //import { withStyles } from "material-ui/styles";
 //import indigo from "material-ui/colors/indigo";
 import deepPurple from "@material-ui/core/colors/deepPurple";
-import { Courses } from "./utils.js";
-import { flattenCourseInfo } from "./flatten-course-info.ts";
+import { Courses } from "./utils";
+import { flattenCourseInfo } from "./flatten-course-info";
 import FileSaver from "file-saver";
+import {
+    CloudDownload,
+    DateRange,
+    Edit,
+    LocationCity,
+    People,
+    School,
+} from "@material-ui/icons";
 
 const ident = function (x) {
     return x;
@@ -116,14 +124,14 @@ class TermItem extends Component {
                     {editable && (
                         <Avatar>
                             <Button color="primary" onClick={this._editTerm}>
-                                <Icon>edit</Icon>
+                                <Edit />
                             </Button>
                         </Avatar>
                     )}
                     <ListItemText
                         primary={
                             <span>
-                                <Icon className="inline-icon">date_range</Icon>
+                                <DateRange className="inline-icon" />
                                 {this.props.year}
                             </span>
                         }
@@ -171,7 +179,7 @@ class SessionSelectDialog extends Component {
             len = 2;
         }
         let filtered = (this.props.sessions || []).filter(
-            (x) => x.term.length === len
+            (x) => x.term.length === len,
         );
         return filtered.map(({ term, year }, index) => (
             <TermItem
@@ -270,7 +278,7 @@ function CourseItem(props) {
                             backgroundColor: deepPurple[300],
                         }}
                     >
-                        <Icon>school</Icon>
+                        <School />
                     </Avatar>
                 </ListItemAvatar>
             </Tooltip>
@@ -278,11 +286,11 @@ function CourseItem(props) {
                 primary={<CourseCode code={props.course} />}
                 secondary={
                     <span className="course-stats">
-                        <Icon style={iconStyle}>location_city</Icon>
+                        <LocationCity style={iconStyle} />
                         <span style={textStyle}>{props.info.lec}</span>
-                        <Icon style={iconStyle}>edit</Icon>
+                        <Edit style={iconStyle} />
                         <span style={textStyle}>{props.info.tut}</span>
-                        <Icon style={iconStyle}>people</Icon>
+                        <People style={iconStyle} />
                         <span style={textStyle}>{props.info.students}</span>
                     </span>
                 }
@@ -305,18 +313,15 @@ function CourseItem(props) {
                             const file = new File(
                                 [csv],
 
-                                `${
-                                    props.info.course
-                                }-enrollments-${new Date().toISOString().slice(
-                                    0,
-                                    10
-                                )}.csv`,
-                                { type: "text/csv" }
+                                `${props.info.course}-enrollments-${new Date()
+                                    .toISOString()
+                                    .slice(0, 10)}.csv`,
+                                { type: "text/csv" },
                             );
                             FileSaver.saveAs(file);
                         }}
                     >
-                        <Icon>download</Icon>
+                        <CloudDownload />
                     </Button>
                 </List>
             )}
